@@ -6,7 +6,7 @@ import (
 	"goCal/internal/logger"
 	"os"
 
-	"github.com/go-pg/pg"
+	"github.com/jackc/pgx/v5"
 )
 
 func DBConnect() {
@@ -16,22 +16,22 @@ func DBConnect() {
 		fmt.Printf(`Failed to get the database url`)
 	}
 	ctx := context.Background()
-
-	opt, err := pg.ParseURL(DATABASE_URL)
+	conn, err := pgx.Connect(ctx, DATABASE_URL)
 	if err != nil {
-		logger.Error("Failed to connect to the database " + err.Error())
-		fmt.Printf("Failed to connect to the database %s ", err)
+		logger.Error("Failed to connect to the database: " + err.Error())
+		fmt.Println("Failed to connect to the database: " + err.Error())
 		os.Exit(1)
 	}
-	db := pg.Connect(opt)
+	defer conn.Close(ctx)
 
-	_, err = db.ExecContext(ctx, "SELECT 1")
+	var one int
+	err = conn.QueryRow(ctx, "SELECT 1").Scan(&one)
 	if err != nil {
-		logger.Error("Failed to ping the database " + err.Error())
-		fmt.Printf("Failed to ping the database %s ", err)
+		logger.Error("Failed to ping the database: " + err.Error())
+		fmt.Println("Failed to ping the database:", err)
 		os.Exit(1)
 	}
 
 	fmt.Println("Connection established")
-	logger.Info("Database in Connected")
+	logger.Info("Database connected")
 }
