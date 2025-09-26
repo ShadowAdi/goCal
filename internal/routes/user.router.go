@@ -45,8 +45,6 @@ func UserRoutes(router *gin.RouterGroup) {
 			return
 		}
 
-		user.Password = ""
-
 		ctx.JSON(http.StatusCreated, gin.H{
 			"user": gin.H{
 				"id":              user.ID,
