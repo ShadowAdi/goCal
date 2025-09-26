@@ -1,7 +1,7 @@
 package config
 
 import (
-	"net/http"
+	"goCal/internal/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,26 +10,11 @@ var mainRouter *gin.Engine
 
 func InitRouter() *gin.Engine {
 	mainRouter = gin.Default()
-	healthRouter := mainRouter.Group("/health")
-	{
-		healthRouter.GET("/", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "Server is working",
+	healthRouter := mainRouter.Group("/api/health")
+	routes.RegisterHealthRoute(healthRouter)
 
-				"success": true,
-			})
-		})
-	}
-
-	userRouter := mainRouter.Group("/user")
-	{
-		userRouter.GET("/", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "User is coming",
-				"success": true,
-			})
-		})
-	}
+	userRouter := mainRouter.Group("/api/user")
+	routes.UserRoutes(userRouter)
 
 	return mainRouter
 }
