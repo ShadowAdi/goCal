@@ -19,4 +19,7 @@ func main() {
 		}
 	}()
 	migrations.CreateUserTable()
+
+	r := config.InitRouter()
+	r.Run(":8080")
 }
