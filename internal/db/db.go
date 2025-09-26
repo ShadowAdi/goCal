@@ -33,5 +33,5 @@ func DBConnect() {
 	}
 
 	fmt.Println("Connection established")
-
+	logger.Info("Database in Connected")
 }
