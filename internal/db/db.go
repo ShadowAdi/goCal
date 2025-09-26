@@ -9,6 +9,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+var Conn *pgx.Conn
+
 func DBConnect() {
 	DATABASE_URL := os.Getenv("DATABASE_URL")
 	if DATABASE_URL == "" {
@@ -22,8 +24,6 @@ func DBConnect() {
 		fmt.Println("Failed to connect to the database: " + err.Error())
 		os.Exit(1)
 	}
-	defer conn.Close(ctx)
-
 	var one int
 	err = conn.QueryRow(ctx, "SELECT 1").Scan(&one)
 	if err != nil {
@@ -32,6 +32,7 @@ func DBConnect() {
 		os.Exit(1)
 	}
 
+	Conn = conn
 	fmt.Println("Connection established")
 	logger.Info("Database connected")
 }
