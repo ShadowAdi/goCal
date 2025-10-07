@@ -64,4 +64,46 @@ func UserRoutes(router *gin.RouterGroup) {
 		})
 
 	})
+	router.GET("/", func(ctx *gin.Context) {
+		var users []schema.User
+
+		query := `SELECT id,username,email,profileUrl,country,welcome_message,timezone,pronouns,date_format,time_format,custom_link,created_at FROM users`
+
+		rows, err := db.Conn.Query(ctx, query)
+		if err != nil {
+			fmt.Println("Failed to get all users:", err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get all users", "success": false})
+			return
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var user schema.User
+			err := rows.Scan(
+				&user.ID,
+				&user.Username,
+				&user.Email,
+				&user.ProfileUrl,
+				&user.Country,
+				&user.WelcomeMessage,
+				&user.Timezone,
+				&user.Pronouns,
+				&user.DateFormat,
+				&user.TimeFormat,
+				&user.CustomLink,
+				&user.CreatedAt,
+			)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+			users = append(users, user)
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"users":   users,
+			"success": true,
+		})
+
+	})
 }
