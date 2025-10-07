@@ -106,4 +106,22 @@ func UserRoutes(router *gin.RouterGroup) {
 		})
 
 	})
+	router.PATCH("/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		if id == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"message": "User ID is required",
+			})
+			return
+		}
+
+		var updates map[string]interface{}
+
+		if err := ctx.ShouldBindJSON(&updates); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Invalid JSON Body"})
+			return
+		}
+
+	})
 }
