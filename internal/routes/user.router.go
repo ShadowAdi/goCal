@@ -20,24 +20,38 @@ func UserRoutes(router *gin.RouterGroup) {
 	router.POST("/", func(ctx *gin.Context) {
 		var user *schema.User
 		if err := ctx.ShouldBindJSON(&user); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "success": false})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err, "success": false})
 			return
 		}
 
-		custom_link := strings.Split(user.Username, " ")[0] + "-" + strings.Split(user.Email, "@")[0]
+		var isExists bool
+
+		checkQuery := `SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`
+
+		err := db.Conn.QueryRow(ctx, checkQuery, user.Email).Scan(&isExists)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database error", "success": false})
+			return
+		}
+		if isExists {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered", "success": false})
+			return
+		}
+		custom_link := strings.Split(user.Username, " ")[0] + "-" + strings.Split(user.Email, " ")[0]
 
 		query := `
 		INSERT INTO users (username, email, password, profileUrl, country, pronouns,custom_link)
 		VALUES ($1,$2,$3,$4,$5,$6,$7)
 		RETURNING id,custom_link,created_at,welcome_message,isVerified,date_format,time_format,timezone;
 		`
-
 		hashedPassword, err := hashedPassword(user.Password)
 		if err != nil {
 			fmt.Println("Error hashing password:", err)
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error hashing password", "success": false})
+			ctx.JSON(http.StatusUnauthorized,
+				gin.H{"error": "Error hashing password", "success": false})
 			return
 		}
+
 		row := db.Conn.QueryRow(ctx, query, user.Username, user.Email, hashedPassword, user.ProfileUrl, user.Country, user.Pronouns, custom_link)
 
 		if err := row.Scan(&user.ID, &user.CustomLink, &user.CreatedAt, &user.WelcomeMessage, &user.IsVerified, &user.DateFormat, &user.TimeFormat, &user.Timezone); err != nil {
@@ -104,24 +118,6 @@ func UserRoutes(router *gin.RouterGroup) {
 			"users":   users,
 			"success": true,
 		})
-
-	})
-	router.PATCH("/:id", func(ctx *gin.Context) {
-		id := ctx.Param("id")
-		if id == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"success": false,
-				"message": "User ID is required",
-			})
-			return
-		}
-
-		var updates map[string]interface{}
-
-		if err := ctx.ShouldBindJSON(&updates); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Invalid JSON Body"})
-			return
-		}
 
 	})
 }
