@@ -1,15 +1,17 @@
 package db
 
 import (
-	"context"
 	"fmt"
 	"goCal/internal/logger"
+	"goCal/internal/schema"
 	"os"
+	"time"
 
-	"github.com/jackc/pgx/v5"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var Conn *pgx.Conn
+var DB *gorm.DB
 
 func DBConnect() {
 	DATABASE_URL := os.Getenv("DATABASE_URL")
@@ -17,22 +19,36 @@ func DBConnect() {
 		logger.Error(`Failed to get the database url`)
 		fmt.Printf(`Failed to get the database url`)
 	}
-	ctx := context.Background()
-	conn, err := pgx.Connect(ctx, DATABASE_URL)
+
+	db, err := gorm.Open(postgres.Open(DATABASE_URL), &gorm.Config{})
 	if err != nil {
-		logger.Error("Failed to connect to the database: " + err.Error())
-		fmt.Println("Failed to connect to the database: " + err.Error())
-		os.Exit(1)
-	}
-	var one int
-	err = conn.QueryRow(ctx, "SELECT 1").Scan(&one)
-	if err != nil {
-		logger.Error("Failed to ping the database: " + err.Error())
-		fmt.Println("Failed to ping the database:", err)
-		os.Exit(1)
+		fmt.Println("Failed to connect to DB: %w", err)
+		logger.Error("Failed to connect to DB: %w", err)
 	}
 
-	Conn = conn
+	sqlDb, err := db.DB()
+	if err != nil {
+		logger.Error("Failed to get sql.DB: %w", err)
+		panic(fmt.Sprintf("Failed to get sql.DB: %w", err))
+	}
+
+	sqlDb.SetMaxOpenConns(25)
+	sqlDb.SetMaxIdleConns(5)
+	sqlDb.SetConnMaxLifetime(5 * time.Minute)
+	sqlDb.SetConnMaxIdleTime(1 * time.Minute)
+
+	if err := sqlDb.Ping(); err != nil {
+		logger.Error("Failed to ping DB: %w", err)
+		panic(fmt.Sprintf("Failed to ping DB: %w", err))
+	}
+
+	DB = db
+
+	if err := DB.AutoMigrate(&schema.User{}); err != nil {
+		logger.Error("Failed to auto-migrate tables: %w", err)
+		panic(fmt.Errorf("Failed to auto-migrate tables: %w", err))
+	}
+
 	fmt.Println("Connection established")
 	logger.Info("Database connected")
 }
