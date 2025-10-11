@@ -120,4 +120,44 @@ func UserRoutes(router *gin.RouterGroup) {
 		})
 
 	})
+	router.GET("/:id", func(ctx *gin.Context) {
+		var user *schema.User
+		id := ctx.Param("id")
+		if id == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"error":   "Failed to get user id",
+			})
+			return
+		}
+
+		query := `SELECT EXISTS(SELECT id,username,email,profileUrl,country,welcome_message,timezone,pronouns,date_format,time_format,custom_link,created_at FROM USERS WHERE id=$1)`
+
+		row := db.Conn.QueryRow(ctx, query, id)
+		err := row.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Email,
+			&user.ProfileUrl,
+			&user.Country,
+			&user.WelcomeMessage,
+			&user.Timezone,
+			&user.Pronouns,
+			&user.DateFormat,
+			&user.TimeFormat,
+			&user.CustomLink,
+			&user.CreatedAt,
+		)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "User Not Found", "success": false})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"user":    user,
+			"success": true,
+		})
+
+	})
 }
