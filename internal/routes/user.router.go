@@ -11,5 +11,5 @@ func hashedPassword(password string) (string, error) {
 }
 
 func UserRoutes(router *gin.RouterGroup) {
-
+	router.GET("/")
 }

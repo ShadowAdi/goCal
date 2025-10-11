@@ -29,7 +29,7 @@ func DBConnect() {
 	sqlDb, err := db.DB()
 	if err != nil {
 		logger.Error("Failed to get sql.DB: %w", err)
-		panic(fmt.Sprintf("Failed to get sql.DB: %w", err))
+		panic(fmt.Errorf("Failed to get sql.DB: %w", err))
 	}
 
 	sqlDb.SetMaxOpenConns(25)
@@ -39,7 +39,7 @@ func DBConnect() {
 
 	if err := sqlDb.Ping(); err != nil {
 		logger.Error("Failed to ping DB: %w", err)
-		panic(fmt.Sprintf("Failed to ping DB: %w", err))
+		panic(fmt.Errorf("Failed to ping DB: %w", err))
 	}
 
 	DB = db
