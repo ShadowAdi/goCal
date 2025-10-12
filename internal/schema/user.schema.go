@@ -51,6 +51,19 @@ type User struct {
 	DeletedAt      gorm.DeletedAt  `gorm:"index" json:"-"`
 }
 
+// UpdateUserRequest defines which fields can be updated
+type UpdateUserRequest struct {
+	Username       *string         `json:"username,omitempty" validate:"omitempty,min=3,max=50"`
+	Country        *string         `json:"country,omitempty"`
+	ProfileUrl     *string         `json:"profile_url,omitempty"`
+	WelcomeMessage *string         `json:"welcome_message,omitempty"`
+	Timezone       *string         `json:"timezone,omitempty"`
+	Pronouns       *PronounType    `json:"pronouns,omitempty"`
+	DateFormat     *DateFormatType `json:"date_format,omitempty"`
+	TimeFormat     *TimeFormatType `json:"time_format,omitempty"`
+	CustomLink     *string         `json:"custom_link,omitempty"`
+}
+
 func (User) TableName() string {
 	return "users"
 }

@@ -12,20 +12,9 @@ func UserRoutes(router *gin.RouterGroup) {
 	userController := controllers.NewUserController(userService)
 
 	router.GET("/", userController.GetUsers)
-	router.GET("/:id", func(ctx *gin.Context) {
-		id := ctx.Param("id")
-		userController.GetUser(id, ctx)
-	})
-	router.POST("/", func(ctx *gin.Context) {
-		userController.CreateUser(ctx)
-	})
-	router.PATCH("/", func(ctx *gin.Context) {
-		id := ctx.Param("id")
-		userController.UpdateUser(id, ctx)
-	})
-	router.DELETE("/:id", func(ctx *gin.Context) {
-		id := ctx.Param("id")
-		userController.DeleteUser(id, ctx)
-	})
+	router.GET("/:id", userController.GetUser)
+	router.POST("/", userController.CreateUser)
+	router.PATCH("/:id", userController.UpdateUser)
+	router.DELETE("/:id", userController.DeleteUser)
 
 }

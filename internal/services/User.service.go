@@ -60,9 +60,45 @@ func (s *UserService) DeleteUser(id string) (string, error) {
 	return "User deleted successfully", nil
 }
 
-func (s *UserService) UpdateUser(id string, updateUser *schema.User) (*schema.User, error) {
-	if updateErr := db.DB.Where("id = ?", id).Updates(updateUser); updateErr.Error != nil {
-		return nil, updateErr.Error
+func (s *UserService) UpdateUser(id string, updateRequest *schema.UpdateUserRequest) (*schema.User, error) {
+	// Create a map of only the non-nil fields to update
+	updateFields := make(map[string]interface{})
+
+	if updateRequest.Username != nil {
+		updateFields["username"] = *updateRequest.Username
 	}
-	return updateUser, nil
+	if updateRequest.Country != nil {
+		updateFields["country"] = *updateRequest.Country
+	}
+	if updateRequest.ProfileUrl != nil {
+		updateFields["profile_url"] = *updateRequest.ProfileUrl
+	}
+	if updateRequest.WelcomeMessage != nil {
+		updateFields["welcome_message"] = *updateRequest.WelcomeMessage
+	}
+	if updateRequest.Timezone != nil {
+		updateFields["timezone"] = *updateRequest.Timezone
+	}
+	if updateRequest.Pronouns != nil {
+		updateFields["pronouns"] = *updateRequest.Pronouns
+	}
+	if updateRequest.DateFormat != nil {
+		updateFields["date_format"] = *updateRequest.DateFormat
+	}
+	if updateRequest.TimeFormat != nil {
+		updateFields["time_format"] = *updateRequest.TimeFormat
+	}
+	if updateRequest.CustomLink != nil {
+		updateFields["custom_link"] = *updateRequest.CustomLink
+	}
+
+	// Update only the specified fields
+	if len(updateFields) > 0 {
+		if err := db.DB.Model(&schema.User{}).Where("id = ?", id).Updates(updateFields).Error; err != nil {
+			return nil, err
+		}
+	}
+
+	// Fetch and return the updated user
+	return s.GetUser(id)
 }

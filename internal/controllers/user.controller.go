@@ -35,20 +35,28 @@ func (uc *UserController) GetUsers(ctx *gin.Context) {
 	return
 }
 
-func (uc *UserController) GetUser(id string, ctx *gin.Context) {
-	user, error := uc.UserService.GetUser(id)
-	if error != nil {
+func (uc *UserController) GetUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"error":   error,
+			"error":   "User ID is required",
+		})
+		return
+	}
+
+	user, error := uc.UserService.GetUser(id)
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   error.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"users":   user,
+		"user":    user,
 	})
-	return
 }
 
 func (uc *UserController) CreateUser(ctx *gin.Context) {
@@ -85,12 +93,21 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 	return
 }
 
-func (uc *UserController) DeleteUser(id string, ctx *gin.Context) {
+func (uc *UserController) DeleteUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "User ID is required",
+		})
+		return
+	}
+
 	message, err := uc.UserService.DeleteUser(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
-			"error":   err,
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -98,21 +115,29 @@ func (uc *UserController) DeleteUser(id string, ctx *gin.Context) {
 		"success": true,
 		"message": message,
 	})
-	return
 }
 
-func (uc *UserController) UpdateUser(id string, ctx *gin.Context) {
-	_, userFoundError := uc.UserService.GetUser(id)
-	if userFoundError != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
+func (uc *UserController) UpdateUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"error":   userFoundError,
+			"error":   "User ID is required",
 		})
 		return
 	}
 
-	var userToUpdate *schema.User
-	if err := ctx.ShouldBindJSON(&userToUpdate); err != nil {
+	_, userFoundError := uc.UserService.GetUser(id)
+	if userFoundError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   userFoundError.Error(),
+		})
+		return
+	}
+
+	var updateRequest *schema.UpdateUserRequest
+	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
@@ -120,7 +145,7 @@ func (uc *UserController) UpdateUser(id string, ctx *gin.Context) {
 		return
 	}
 
-	updatedUser, updateUserError := uc.UserService.UpdateUser(id, userToUpdate)
+	updatedUser, updateUserError := uc.UserService.UpdateUser(id, updateRequest)
 	if updateUserError != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -133,6 +158,4 @@ func (uc *UserController) UpdateUser(id string, ctx *gin.Context) {
 		"success": true,
 		"user":    updatedUser,
 	})
-	return
-
 }
