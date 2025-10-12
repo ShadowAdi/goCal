@@ -1,15 +1,17 @@
 package routes
 
 import (
+	"goCal/internal/controllers"
+
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
-func hashedPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(bytes), err
-}
-
 func UserRoutes(router *gin.RouterGroup) {
-	router.GET("/")
+	userController := controllers.NewUserController()
+	router.GET("/", userController.GetUsers)
+	router.GET("/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		userController.GetUser(id, ctx)
+	})
+
 }

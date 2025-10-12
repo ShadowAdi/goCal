@@ -12,6 +12,10 @@ import (
 
 type UserController struct{}
 
+func NewUserController() *UserController {
+	return &UserController{}
+}
+
 func (uc *UserController) GetUsers(ctx *gin.Context) {
 	var users []schema.User
 	result := db.DB.Find(&users)
