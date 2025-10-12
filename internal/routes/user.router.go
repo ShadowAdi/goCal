@@ -15,6 +15,7 @@ func UserRoutes(router *gin.RouterGroup) {
 	router.GET("/deleted", userController.GetSoftDeletedUsers) // Get all soft-deleted users
 	router.GET("/:id", userController.GetUser)
 	router.POST("/", userController.CreateUser)
+	router.POST("/login", userController.LoginUser)
 	router.PATCH("/:id", userController.UpdateUser)
 	router.DELETE("/:id", userController.DeleteUser)                      // Soft delete
 	router.POST("/:id/restore", userController.RestoreUser)               // Restore soft-deleted user

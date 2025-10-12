@@ -1,12 +1,17 @@
 package controllers
 
 import (
+	"fmt"
+	"goCal/internal/logger"
 	"goCal/internal/schema"
 	"goCal/internal/services"
 	"goCal/internal/utils"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type UserController struct {
@@ -89,6 +94,60 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"users":   user,
+	})
+	return
+}
+
+func (uc *UserController) LoginUser(ctx *gin.Context) {
+
+	var newUser *schema.User
+	if err := ctx.ShouldBindJSON(&newUser); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+	JWT_KEY := os.Getenv("JWT_KEY")
+	if JWT_KEY == "" {
+		logger.Error(`Failed to get the database url`)
+		fmt.Printf(`Failed to get the database url`)
+	}
+	userFound, error := uc.UserService.GetUserByEmail(newUser.Email)
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   error.Error(),
+		})
+		return
+	}
+	err := utils.CompareHashAndPassword(userFound.Password, newUser.Password)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+		Issuer:    newUser.Email,
+		Id:        newUser.ID.String(),
+		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+	})
+	token, err := claims.SignedString([]byte(JWT_KEY))
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"token":   token,
+		"email":   userFound.Email,
+		"id":      userFound.ID,
 	})
 	return
 }
