@@ -115,13 +115,7 @@ func (s *UserService) CreateUser(newUser *schema.User) (*schema.User, error) {
 			existingUser.DeletedAt = gorm.DeletedAt{}
 			existingUser.Username = newUser.Username
 			existingUser.Password = newUser.Password
-			existingUser.Country = newUser.Country
 			existingUser.ProfileUrl = newUser.ProfileUrl
-			existingUser.WelcomeMessage = newUser.WelcomeMessage
-			existingUser.Timezone = newUser.Timezone
-			existingUser.Pronouns = newUser.Pronouns
-			existingUser.DateFormat = newUser.DateFormat
-			existingUser.TimeFormat = newUser.TimeFormat
 			existingUser.CustomLink = newUser.CustomLink
 
 			if err := db.DB.Save(&existingUser).Error; err != nil {
@@ -160,26 +154,8 @@ func (s *UserService) UpdateUser(id string, updateRequest *schema.UpdateUserRequ
 	if updateRequest.Username != nil {
 		updateFields["username"] = *updateRequest.Username
 	}
-	if updateRequest.Country != nil {
-		updateFields["country"] = *updateRequest.Country
-	}
 	if updateRequest.ProfileUrl != nil {
 		updateFields["profile_url"] = *updateRequest.ProfileUrl
-	}
-	if updateRequest.WelcomeMessage != nil {
-		updateFields["welcome_message"] = *updateRequest.WelcomeMessage
-	}
-	if updateRequest.Timezone != nil {
-		updateFields["timezone"] = *updateRequest.Timezone
-	}
-	if updateRequest.Pronouns != nil {
-		updateFields["pronouns"] = *updateRequest.Pronouns
-	}
-	if updateRequest.DateFormat != nil {
-		updateFields["date_format"] = *updateRequest.DateFormat
-	}
-	if updateRequest.TimeFormat != nil {
-		updateFields["time_format"] = *updateRequest.TimeFormat
 	}
 	if updateRequest.CustomLink != nil {
 		updateFields["custom_link"] = *updateRequest.CustomLink
