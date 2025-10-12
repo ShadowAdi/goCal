@@ -40,3 +40,11 @@ func (s *UserService) GetUserByEmail(email string) (*schema.User, error) {
 	}
 	return user, nil
 }
+
+func (s *UserService) CreateUser(newUser *schema.User) (*schema.User, error) {
+	result := db.DB.Create(newUser)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return newUser, nil
+}
