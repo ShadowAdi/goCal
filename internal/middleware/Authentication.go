@@ -5,6 +5,7 @@ import (
 	"goCal/internal/logger"
 	"goCal/internal/types"
 	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -37,6 +38,12 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		ctx.Set("userId", claims.ID)
 		ctx.Set("email", claims.Issuer)
+		if strings.ToLower(claims.Issuer) == "shadowshukla76@gmail.com" {
+			ctx.Set("role", "admin")
+		} else {
+			ctx.Set("role", "user")
+		}
+
 		ctx.Next()
 	}
 }

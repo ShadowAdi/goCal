@@ -2,6 +2,7 @@ package routes
 
 import (
 	"goCal/internal/controllers"
+	"goCal/internal/middleware"
 	"goCal/internal/services"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,8 @@ func UserRoutes(router *gin.RouterGroup) {
 	router.POST("/login", userController.LoginUser)
 
 	protectedRoutes := router.Group("/")
+
+	protectedRoutes.Use(middleware.AuthMiddleware())
 
 	protectedRoutes.PATCH("/:id", userController.UpdateUser)
 	protectedRoutes.DELETE("/:id", userController.DeleteUser)

