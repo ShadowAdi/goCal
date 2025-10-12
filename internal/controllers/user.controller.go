@@ -100,3 +100,39 @@ func (uc *UserController) DeleteUser(id string, ctx *gin.Context) {
 	})
 	return
 }
+
+func (uc *UserController) UpdateUser(id string, ctx *gin.Context) {
+	_, userFoundError := uc.UserService.GetUser(id)
+	if userFoundError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   userFoundError,
+		})
+		return
+	}
+
+	var userToUpdate *schema.User
+	if err := ctx.ShouldBindJSON(&userToUpdate); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	updatedUser, updateUserError := uc.UserService.UpdateUser(id, userToUpdate)
+	if updateUserError != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   updateUserError.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"user":    updatedUser,
+	})
+	return
+
+}

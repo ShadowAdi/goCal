@@ -20,7 +20,8 @@ func UserRoutes(router *gin.RouterGroup) {
 		userController.CreateUser(ctx)
 	})
 	router.PATCH("/", func(ctx *gin.Context) {
-		userController.CreateUser(ctx)
+		id := ctx.Param("id")
+		userController.UpdateUser(id, ctx)
 	})
 	router.DELETE("/:id", func(ctx *gin.Context) {
 		id := ctx.Param("id")

@@ -59,3 +59,10 @@ func (s *UserService) DeleteUser(id string) (string, error) {
 	}
 	return "User deleted successfully", nil
 }
+
+func (s *UserService) UpdateUser(id string, updateUser *schema.User) (*schema.User, error) {
+	if updateErr := db.DB.Where("id = ?", id).Updates(updateUser); updateErr.Error != nil {
+		return nil, updateErr.Error
+	}
+	return updateUser, nil
+}
