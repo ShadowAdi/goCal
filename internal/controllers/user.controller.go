@@ -79,3 +79,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 	})
 	return
 }
+
+func (uc *UserController) DeleteUser(id string, ctx *gin.Context) {
+
+}

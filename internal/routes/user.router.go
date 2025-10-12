@@ -19,5 +19,9 @@ func UserRoutes(router *gin.RouterGroup) {
 	router.POST("/", func(ctx *gin.Context) {
 		userController.CreateUser(ctx)
 	})
+	router.DELETE("/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		userController.DeleteUser(id, ctx)
+	})
 
 }

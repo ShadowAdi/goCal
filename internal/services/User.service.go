@@ -48,3 +48,14 @@ func (s *UserService) CreateUser(newUser *schema.User) (*schema.User, error) {
 	}
 	return newUser, nil
 }
+
+func (s *UserService) DeleteUser(id string) (string, error) {
+	userFound, err := s.GetUser(id)
+	if err != nil {
+		return "User Not Found", err
+	}
+	if err := db.DB.Delete(&userFound).Error; err != nil {
+		return "Failed to delete user", err
+	}
+	return "User deleted successfully", nil
+}
