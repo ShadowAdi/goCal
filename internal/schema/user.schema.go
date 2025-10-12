@@ -3,8 +3,8 @@ package schema
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"modernc.org/libc/uuid"
 )
 
 type User struct {
