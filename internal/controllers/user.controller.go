@@ -159,3 +159,72 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		"user":    updatedUser,
 	})
 }
+
+// GetSoftDeletedUsers returns all soft-deleted users
+func (uc *UserController) GetSoftDeletedUsers(ctx *gin.Context) {
+	users, err := uc.UserService.GetSoftDeletedUsers()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"users":   users,
+	})
+}
+
+// RestoreUser restores a soft-deleted user
+func (uc *UserController) RestoreUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "User ID is required",
+		})
+		return
+	}
+
+	user, err := uc.UserService.RestoreUser(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "User restored successfully",
+		"user":    user,
+	})
+}
+
+// PermanentlyDeleteUser permanently deletes a user (hard delete)
+func (uc *UserController) PermanentlyDeleteUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "User ID is required",
+		})
+		return
+	}
+
+	err := uc.UserService.PermanentlyDeleteUser(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "User permanently deleted",
+	})
+}
