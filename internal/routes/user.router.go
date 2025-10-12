@@ -12,13 +12,17 @@ func UserRoutes(router *gin.RouterGroup) {
 	userController := controllers.NewUserController(userService)
 
 	router.GET("/", userController.GetUsers)
-	router.GET("/deleted", userController.GetSoftDeletedUsers) // Get all soft-deleted users
 	router.GET("/:id", userController.GetUser)
 	router.POST("/", userController.CreateUser)
 	router.POST("/login", userController.LoginUser)
-	router.PATCH("/:id", userController.UpdateUser)
-	router.DELETE("/:id", userController.DeleteUser)                      // Soft delete
-	router.POST("/:id/restore", userController.RestoreUser)               // Restore soft-deleted user
-	router.DELETE("/:id/permanent", userController.PermanentlyDeleteUser) // Hard delete
+
+	protectedRoutes := router.Group("/")
+
+	protectedRoutes.PATCH("/:id", userController.UpdateUser)
+	protectedRoutes.DELETE("/:id", userController.DeleteUser)
+
+	protectedRoutes.GET("/deleted", userController.GetSoftDeletedUsers)
+	protectedRoutes.POST("/:id/restore", userController.RestoreUser)               // Restore soft-deleted user
+	protectedRoutes.DELETE("/:id/permanent", userController.PermanentlyDeleteUser) // Hard delete
 
 }

@@ -177,6 +177,34 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 }
 
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
+	email, exists := ctx.Get("email")
+
+	if !exists {
+		ctx.JSON(http.StatusNotAcceptable, gin.H{
+			"success": false,
+			"error":   "Email not found in context",
+		})
+		return
+	}
+
+	emailStr, ok := email.(string)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid email type in context",
+		})
+		return
+	}
+
+	loggedInUserFound, loggedInUserError := uc.UserService.GetUserByEmail(emailStr)
+	if loggedInUserError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
 	id := ctx.Param("id")
 	if id == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -186,11 +214,19 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	_, userFoundError := uc.UserService.GetUser(id)
+	userFound, userFoundError := uc.UserService.GetUser(id)
 	if userFoundError != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"error":   userFoundError.Error(),
+		})
+		return
+	}
+
+	if userFound.ID != loggedInUserFound.ID {
+		ctx.JSON(http.StatusNotAcceptable, gin.H{
+			"success": false,
+			"error":   "You Are Not Authenticated",
 		})
 		return
 	}
