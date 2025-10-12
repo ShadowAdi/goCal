@@ -2,12 +2,15 @@ package routes
 
 import (
 	"goCal/internal/controllers"
+	"goCal/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 func UserRoutes(router *gin.RouterGroup) {
-	userController := controllers.NewUserController()
+	userService := services.NewUserService()
+	userController := controllers.NewUserController(userService)
+
 	router.GET("/", userController.GetUsers)
 	router.GET("/:id", func(ctx *gin.Context) {
 		id := ctx.Param("id")

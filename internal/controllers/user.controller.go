@@ -1,30 +1,30 @@
 package controllers
 
 import (
-	"fmt"
-	"goCal/internal/db"
-	"goCal/internal/logger"
-	"goCal/internal/schema"
+	"goCal/internal/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type UserController struct{}
+type UserController struct {
+	UserService *services.UserService
+}
 
-func NewUserController() *UserController {
-	return &UserController{}
+func NewUserController(userService *services.UserService) *UserController {
+	return &UserController{
+		UserService: userService,
+	}
 }
 
 func (uc *UserController) GetUsers(ctx *gin.Context) {
-	var users []schema.User
-	result := db.DB.Find(&users)
-
-	if result.Error != nil {
-		logger.Error(`Failed to get Users %w`, result.Error)
-		panic(fmt.Errorf("Failed to get all users: %w", result.Error))
+	users, error := uc.UserService.GetUsers()
+	if error != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   error,
+		})
 	}
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"users":   users,
@@ -33,14 +33,13 @@ func (uc *UserController) GetUsers(ctx *gin.Context) {
 }
 
 func (uc *UserController) GetUser(id string, ctx *gin.Context) {
-	var user schema.User
-	result := db.DB.Where("id = ?", id).First(&user)
-
-	if result.Error != nil {
-		logger.Error(`Failed to get User %w`, result.Error)
-		panic(fmt.Errorf("Failed to get user: %w", result.Error))
+	user, error := uc.UserService.GetUser(id)
+	if error != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   error,
+		})
 	}
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"users":   user,
