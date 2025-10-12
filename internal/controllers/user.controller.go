@@ -153,11 +153,47 @@ func (uc *UserController) LoginUser(ctx *gin.Context) {
 }
 
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
+	userId, exists := ctx.Get("userId")
+
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "User Id not found in context",
+		})
+		return
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	_, loggedInUserError := uc.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
 	id := ctx.Param("id")
 	if id == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "User ID is required",
+		})
+		return
+	}
+
+	if id != userIdStr {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "User ID and logged in user are not same",
 		})
 		return
 	}
