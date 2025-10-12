@@ -49,7 +49,7 @@ func (uc *UserController) GetUser(id string, ctx *gin.Context) {
 	return
 }
 
-func (uc *UserController) CreateUser(id string, ctx *gin.Context) {
+func (uc *UserController) CreateUser(ctx *gin.Context) {
 	var newUser *schema.User
 	if err := ctx.ShouldBindJSON(&newUser); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{

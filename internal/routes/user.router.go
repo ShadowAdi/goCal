@@ -16,5 +16,8 @@ func UserRoutes(router *gin.RouterGroup) {
 		id := ctx.Param("id")
 		userController.GetUser(id, ctx)
 	})
+	router.POST("/", func(ctx *gin.Context) {
+		userController.CreateUser(ctx)
+	})
 
 }
