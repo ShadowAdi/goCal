@@ -26,6 +26,7 @@ func (uc *UserController) GetUsers(ctx *gin.Context) {
 			"success": false,
 			"error":   error,
 		})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -41,6 +42,7 @@ func (uc *UserController) GetUser(id string, ctx *gin.Context) {
 			"success": false,
 			"error":   error,
 		})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -56,6 +58,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	hashedPassword, err := utils.HashPassword(newUser.Password)
 	if err != nil {
@@ -63,6 +66,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 			"success": false,
 			"error":   err,
 		})
+		return
 	}
 	newUser.Password = hashedPassword
 
@@ -72,6 +76,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 			"success": false,
 			"error":   error,
 		})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -81,5 +86,17 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 }
 
 func (uc *UserController) DeleteUser(id string, ctx *gin.Context) {
+	message, err := uc.UserService.DeleteUser(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   err,
+		})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": message,
+	})
 
 }
