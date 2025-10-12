@@ -92,11 +92,11 @@ func (uc *UserController) DeleteUser(id string, ctx *gin.Context) {
 			"success": false,
 			"error":   err,
 		})
+		return
 	}
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": message,
 	})
-
+	return
 }
