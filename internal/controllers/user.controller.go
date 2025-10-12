@@ -8,6 +8,7 @@ import (
 	"goCal/internal/utils"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -293,6 +294,43 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
 // GetSoftDeletedUsers returns all soft-deleted users
 func (uc *UserController) GetSoftDeletedUsers(ctx *gin.Context) {
+
+	userId, exists := ctx.Get("userId")
+
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "User Id not found in context",
+		})
+		return
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	loggedInUser, loggedInUserError := uc.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if strings.ToLower(loggedInUser.Email) != "shadowshukla76@gmail.com" {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   "Only Admin Can Access this api",
+		})
+		return
+	}
+
 	users, err := uc.UserService.GetSoftDeletedUsers()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -309,6 +347,43 @@ func (uc *UserController) GetSoftDeletedUsers(ctx *gin.Context) {
 
 // RestoreUser restores a soft-deleted user
 func (uc *UserController) RestoreUser(ctx *gin.Context) {
+
+	userId, exists := ctx.Get("userId")
+
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "User Id not found in context",
+		})
+		return
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	loggedInUser, loggedInUserError := uc.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if strings.ToLower(loggedInUser.Email) != "shadowshukla76@gmail.com" {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   "Only Admin Can Access this api",
+		})
+		return
+	}
+
 	id := ctx.Param("id")
 	if id == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -336,6 +411,43 @@ func (uc *UserController) RestoreUser(ctx *gin.Context) {
 
 // PermanentlyDeleteUser permanently deletes a user (hard delete)
 func (uc *UserController) PermanentlyDeleteUser(ctx *gin.Context) {
+
+	userId, exists := ctx.Get("userId")
+
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "User Id not found in context",
+		})
+		return
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	loggedInUser, loggedInUserError := uc.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if strings.ToLower(loggedInUser.Email) != "shadowshukla76@gmail.com" {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   "Only Admin Can Access this api",
+		})
+		return
+	}
+
 	id := ctx.Param("id")
 	if id == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{
