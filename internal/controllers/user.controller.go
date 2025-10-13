@@ -182,8 +182,6 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Printf("JWT Token User ID: %s\n", userIdStr)
-
 	_, loggedInUserError := uc.UserService.GetUser(userIdStr)
 	if loggedInUserError != nil {
 		fmt.Printf("Error finding logged-in user: %v\n", loggedInUserError)
@@ -194,27 +192,7 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	id := ctx.Param("id")
-	if id == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"success": false,
-			"error":   "User ID is required",
-		})
-		return
-	}
-
-	fmt.Printf("URL Parameter ID: %s\n", id)
-
-	if id != userIdStr {
-		fmt.Printf("ID mismatch - URL: %s, JWT: %s\n", id, userIdStr)
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"success": false,
-			"error":   "User ID and logged in user are not same",
-		})
-		return
-	}
-
-	message, err := uc.UserService.DeleteUser(id)
+	message, err := uc.UserService.DeleteUser(userIdStr)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
@@ -257,32 +235,6 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	id := ctx.Param("id")
-	if id == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"success": false,
-			"error":   "User ID is required",
-		})
-		return
-	}
-
-	userFound, userFoundError := uc.UserService.GetUser(id)
-	if userFoundError != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"success": false,
-			"error":   userFoundError.Error(),
-		})
-		return
-	}
-
-	if userFound.ID != loggedInUserFound.ID {
-		ctx.JSON(http.StatusNotAcceptable, gin.H{
-			"success": false,
-			"error":   "You Are Not Authenticated",
-		})
-		return
-	}
-
 	var updateRequest *schema.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -292,7 +244,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	updatedUser, updateUserError := uc.UserService.UpdateUser(id, updateRequest)
+	updatedUser, updateUserError := uc.UserService.UpdateUser(loggedInUserFound.ID.String(), updateRequest)
 	if updateUserError != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,

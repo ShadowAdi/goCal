@@ -21,8 +21,8 @@ func UserRoutes(router *gin.RouterGroup) {
 
 	protectedRoutes.Use(middleware.AuthMiddleware())
 
-	protectedRoutes.PATCH("/:id", userController.UpdateUser)
-	protectedRoutes.DELETE("/:id", userController.DeleteUser)
+	protectedRoutes.PATCH("/", userController.UpdateUser)
+	protectedRoutes.DELETE("/", userController.DeleteUser)
 
 	protectedRoutes.GET("/deleted", userController.GetSoftDeletedUsers)
 	protectedRoutes.POST("/:id/restore", userController.RestoreUser)               // Restore soft-deleted user
