@@ -19,6 +19,9 @@ type User struct {
 	CustomLink   *string        `gorm:"size:255" json:"custom_link,omitempty"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`
+	IsVerified   bool           `gorm:"default:false" json:"is_verified"`
+	VerifyCode   string         `gorm:"size:4" json:"-"`
+	CodeExpiry   time.Time      `json:"-"`
 	StorageUsed  int64          `gorm:"default:0" json:"storage_used"`
 	StorageLimit int64          `gorm:"default:524288000" json:"storage_limit"`
 	Role         string         `gorm:"default:user" json:"role"` // e.g. "user" | "admin"
