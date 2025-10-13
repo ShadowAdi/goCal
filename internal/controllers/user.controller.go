@@ -105,6 +105,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 		"success": true,
 		"users":   user,
 	})
+
 	return
 }
 

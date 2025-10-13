@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -52,6 +53,10 @@ func (User) TableName() string {
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.ID = uuid.New()
+
+	u.VerifyCode = fmt.Sprintf("%04d", rand.Intn(10000))
+	u.IsVerified = false
+	u.CodeExpiry = time.Now().Add(15 * time.Minute)
 
 	if strings.ToLower(u.Email) == ADMIN_EMAIL {
 		u.Role = "admin"
