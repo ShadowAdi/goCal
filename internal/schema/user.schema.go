@@ -30,7 +30,7 @@ var ADMIN_EMAIL string
 func init() {
 	ADMIN_EMAIL = os.Getenv("ADMIN_EMAIL")
 	if ADMIN_EMAIL == "" {
-		fmt.Printf(`Failed to get the ADMIN_EMAIL url`)
+		fmt.Printf(`Failed to get the ADMIN_EMAIL`)
 	}
 }
 
@@ -47,7 +47,9 @@ func (User) TableName() string {
 	return "users"
 }
 
-func (u *User) BeforeCreate() (err error) {
+func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+	u.ID = uuid.New()
+
 	if strings.ToLower(u.Email) == ADMIN_EMAIL {
 		u.Role = "admin"
 	} else {

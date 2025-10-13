@@ -16,7 +16,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 	ADMIN_EMAIL = os.Getenv("ADMIN_EMAIL")
 	if ADMIN_EMAIL == "" {
-		fmt.Printf(`Failed to get the ADMIN_EMAIL url`)
+		fmt.Printf(`Failed to get the ADMIN_EMAIL`)
 	}
 	JWT_KEY := os.Getenv("JWT_KEY")
 	if JWT_KEY == "" {
@@ -30,6 +30,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
+
+		fmt.Printf("Token %s", tokenString)
 
 		claims := &types.Claims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims,

@@ -24,7 +24,7 @@ var ADMIN_EMAIL string
 func Init() {
 	ADMIN_EMAIL = os.Getenv("ADMIN_EMAIL")
 	if ADMIN_EMAIL == "" {
-		fmt.Printf(`Failed to get the ADMIN_EMAIL url`)
+		fmt.Printf(`Failed to get the ADMIN_EMAIL`)
 	}
 }
 
