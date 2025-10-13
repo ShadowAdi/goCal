@@ -12,6 +12,12 @@ import (
 )
 
 func AuthMiddleware() gin.HandlerFunc {
+	var ADMIN_EMAIL string
+
+	ADMIN_EMAIL = os.Getenv("ADMIN_EMAIL")
+	if ADMIN_EMAIL == "" {
+		fmt.Printf(`Failed to get the ADMIN_EMAIL url`)
+	}
 	JWT_KEY := os.Getenv("JWT_KEY")
 	if JWT_KEY == "" {
 		logger.Error(`Failed to get the database url`)
@@ -38,7 +44,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		ctx.Set("userId", claims.ID)
 		ctx.Set("email", claims.Issuer)
-		if strings.ToLower(claims.Issuer) == "shadowshukla76@gmail.com" {
+		if strings.ToLower(claims.Issuer) == ADMIN_EMAIL {
 			ctx.Set("role", "admin")
 		} else {
 			ctx.Set("role", "user")

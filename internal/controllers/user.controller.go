@@ -19,6 +19,15 @@ type UserController struct {
 	UserService *services.UserService
 }
 
+var ADMIN_EMAIL string
+
+func Init() {
+	ADMIN_EMAIL = os.Getenv("ADMIN_EMAIL")
+	if ADMIN_EMAIL == "" {
+		fmt.Printf(`Failed to get the ADMIN_EMAIL url`)
+	}
+}
+
 func NewUserController(userService *services.UserService) *UserController {
 	return &UserController{
 		UserService: userService,
@@ -323,7 +332,7 @@ func (uc *UserController) GetSoftDeletedUsers(ctx *gin.Context) {
 		return
 	}
 
-	if strings.ToLower(loggedInUser.Email) != "shadowshukla76@gmail.com" {
+	if strings.ToLower(loggedInUser.Email) != ADMIN_EMAIL {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"error":   "Only Admin Can Access this api",
@@ -376,7 +385,7 @@ func (uc *UserController) RestoreUser(ctx *gin.Context) {
 		return
 	}
 
-	if strings.ToLower(loggedInUser.Email) != "shadowshukla76@gmail.com" {
+	if strings.ToLower(loggedInUser.Email) != ADMIN_EMAIL {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"error":   "Only Admin Can Access this api",
@@ -440,7 +449,7 @@ func (uc *UserController) PermanentlyDeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	if strings.ToLower(loggedInUser.Email) != "shadowshukla76@gmail.com" {
+	if strings.ToLower(loggedInUser.Email) != ADMIN_EMAIL {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"error":   "Only Admin Can Access this api",
