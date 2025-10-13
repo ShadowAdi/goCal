@@ -141,8 +141,8 @@ func (uc *UserController) LoginUser(ctx *gin.Context) {
 	}
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer:    newUser.Email,
-		Id:        newUser.ID.String(),
+		Issuer:    userFound.Email,
+		Id:        userFound.ID.String(),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	})
 	token, err := claims.SignedString([]byte(JWT_KEY))
@@ -182,8 +182,11 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Printf("JWT Token User ID: %s\n", userIdStr)
+
 	_, loggedInUserError := uc.UserService.GetUser(userIdStr)
 	if loggedInUserError != nil {
+		fmt.Printf("Error finding logged-in user: %v\n", loggedInUserError)
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"error":   loggedInUserError.Error(),
@@ -200,7 +203,10 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Printf("URL Parameter ID: %s\n", id)
+
 	if id != userIdStr {
+		fmt.Printf("ID mismatch - URL: %s, JWT: %s\n", id, userIdStr)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"success": false,
 			"error":   "User ID and logged in user are not same",

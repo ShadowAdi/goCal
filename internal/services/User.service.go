@@ -137,11 +137,15 @@ func (s *UserService) CreateUser(newUser *schema.User) (*schema.User, error) {
 }
 
 func (s *UserService) DeleteUser(id string) (string, error) {
+	fmt.Printf("Attempting to delete user with ID: %s\n", id)
 	userFound, err := s.GetUser(id)
 	if err != nil {
+		fmt.Printf("User not found for deletion: %v\n", err)
 		return "User Not Found", err
 	}
+	fmt.Printf("User found for deletion: %+v\n", userFound)
 	if err := db.DB.Delete(&userFound).Error; err != nil {
+		fmt.Printf("Error deleting user: %v\n", err)
 		return "Failed to delete user", err
 	}
 	return "User deleted successfully", nil

@@ -24,29 +24,50 @@ func AuthMiddleware() gin.HandlerFunc {
 		fmt.Printf(`Failed to get the database url`)
 	}
 	return func(ctx *gin.Context) {
-		tokenString := ctx.GetHeader("token")
+		var tokenString string
+
+		// Check Authorization header first (standard way)
+		authHeader := ctx.GetHeader("Authorization")
+		if authHeader != "" {
+			// Extract token from "Bearer <token>" format
+			tokenParts := strings.Split(authHeader, " ")
+			if len(tokenParts) == 2 && tokenParts[0] == "Bearer" {
+				tokenString = tokenParts[1]
+			}
+		}
+
+		// Fallback to token header if Authorization is not present or invalid
+		if tokenString == "" {
+			tokenString = ctx.GetHeader("token")
+		}
+
 		if tokenString == "" {
 			ctx.JSON(401, gin.H{"error": "Missing Authorization header", "success": false})
 			ctx.Abort()
 			return
 		}
 
-		fmt.Printf("Token %s", tokenString)
-
 		claims := &types.Claims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims,
 			func(t *jwt.Token) (interface{}, error) {
-				return JWT_KEY, nil
+				return []byte(JWT_KEY), nil
 			})
-		if err != nil || !token.Valid {
+		if err != nil {
+			fmt.Printf("JWT Parse Error: %v", err)
+			ctx.JSON(401, gin.H{"error": "Invalid token", "success": false})
+			ctx.Abort()
+			return
+		}
+		if !token.Valid {
+			fmt.Printf("Token is not valid")
 			ctx.JSON(401, gin.H{"error": "Invalid token", "success": false})
 			ctx.Abort()
 			return
 		}
 
-		ctx.Set("userId", claims.ID)
+		ctx.Set("userId", claims.Id)
 		ctx.Set("email", claims.Issuer)
-		if strings.ToLower(claims.Issuer) == ADMIN_EMAIL {
+		if strings.ToLower(claims.Issuer) == strings.ToLower(ADMIN_EMAIL) {
 			ctx.Set("role", "admin")
 		} else {
 			ctx.Set("role", "user")
