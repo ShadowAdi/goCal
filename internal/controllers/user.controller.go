@@ -133,6 +133,12 @@ func (uc *UserController) LoginUser(ctx *gin.Context) {
 		})
 		return
 	}
+	if userFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
+	}
 	err := utils.CompareHashAndPassword(userFound.Password, newUser.Password)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -194,7 +200,7 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	_, loggedInUserError := uc.UserService.GetUser(userIdStr)
+	loggedInUserFound, loggedInUserError := uc.UserService.GetUser(userIdStr)
 	if loggedInUserError != nil {
 		fmt.Printf("Error finding logged-in user: %v\n", loggedInUserError)
 		ctx.JSON(http.StatusNotFound, gin.H{
@@ -202,6 +208,13 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 			"error":   loggedInUserError.Error(),
 		})
 		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
 	}
 
 	message, err := uc.UserService.DeleteUser(userIdStr)
@@ -245,6 +258,13 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 			"error":   loggedInUserError.Error(),
 		})
 		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
 	}
 
 	var updateRequest *schema.UpdateUserRequest
