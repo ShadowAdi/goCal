@@ -16,6 +16,8 @@ func UserRoutes(router *gin.RouterGroup) {
 	router.GET("/:id", userController.GetUser)
 	router.POST("/", userController.CreateUser)
 	router.POST("/login", userController.LoginUser)
+	router.POST("/verify", userController.VerifyUser)
+	router.POST("/resend-verification", userController.ResendVerificationEmail)
 
 	protectedRoutes := router.Group("/")
 

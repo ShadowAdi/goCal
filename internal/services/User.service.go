@@ -5,14 +5,25 @@ import (
 	"goCal/internal/db"
 	"goCal/internal/logger"
 	"goCal/internal/schema"
+	"time"
 
 	"gorm.io/gorm"
 )
 
-type UserService struct{}
+type UserService struct {
+	emailService *EmailService
+}
 
 func NewUserService() *UserService {
-	return &UserService{}
+	emailService, err := NewEmailServices()
+	if err != nil {
+		logger.Error("Failed to initialize email service: %v", err)
+		// You can decide whether to fail completely or continue without email service
+		// For now, we'll log the error and continue
+	}
+	return &UserService{
+		emailService: emailService,
+	}
 }
 
 func (s *UserService) GetUsers() ([]*schema.User, error) {
@@ -121,6 +132,16 @@ func (s *UserService) CreateUser(newUser *schema.User) (*schema.User, error) {
 			if err := db.DB.Save(&existingUser).Error; err != nil {
 				return nil, err
 			}
+
+			// Send verification email for restored user
+			if s.emailService != nil {
+				go func() {
+					if _, err := s.emailService.SendVerificationEmail(existingUser); err != nil {
+						logger.Error("Failed to send verification email to restored user %s: %v", existingUser.Email, err)
+					}
+				}()
+			}
+
 			return existingUser, nil
 		} else {
 			// User exists and is not deleted - return error
@@ -128,11 +149,25 @@ func (s *UserService) CreateUser(newUser *schema.User) (*schema.User, error) {
 		}
 	}
 
-	// User doesn't exist, create new one
+	// Create new user
 	result := db.DB.Create(newUser)
 	if result.Error != nil {
 		return nil, result.Error
 	}
+
+	// Send verification email for new user
+	if s.emailService != nil {
+		go func() {
+			if emailResponse, err := s.emailService.SendVerificationEmail(newUser); err != nil {
+				logger.Error("Failed to send verification email to new user %s: %v", newUser.Email, err)
+			} else {
+				logger.Info("Verification email queued for user %s: %s", newUser.Email, emailResponse.Message)
+			}
+		}()
+	} else {
+		logger.Warn("Email service not available - verification email not sent for user: %s", newUser.Email)
+	}
+
 	return newUser, nil
 }
 
@@ -174,4 +209,76 @@ func (s *UserService) UpdateUser(id string, updateRequest *schema.UpdateUserRequ
 
 	// Fetch and return the updated user
 	return s.GetUser(id)
+}
+
+// ResendVerificationEmail resends verification email to a user
+func (s *UserService) ResendVerificationEmail(email string) (*EmailResponse, error) {
+	if s.emailService == nil {
+		return &EmailResponse{
+			Success: false,
+			Message: "Email Service Not Available",
+			Error:   "Email Service Not Available",
+		}, fmt.Errorf("Email Service Not Available")
+	}
+
+	user, err := s.GetUserByEmail(email)
+
+	if err != nil {
+		return &EmailResponse{
+			Success: false,
+			Message: "User Not Found",
+			Error:   err.Error(),
+		}, err
+	}
+
+	if user.IsVerified {
+		return &EmailResponse{
+			Success: false,
+			Message: "Already Verified",
+			Error:   "Already Verified",
+		}, fmt.Errorf("Already Verified")
+	}
+
+	user.VerifyCode = fmt.Sprintf("%40d")
+	user.CodeExpiry = time.Now().Add(15 * time.Minute)
+
+	if err := db.DB.Save(user).Error; err != nil {
+		return &EmailResponse{
+			Success: false,
+			Message: "Failed to update verification code",
+			Error:   err.Error(),
+		}, err
+	}
+
+	return s.emailService.SendVerificationEmail(user)
+
+}
+
+// VerifyUser verifies a user with the provided verification code
+func (s *UserService) VerifyUser(email, verificationCode string) (*schema.User, error) {
+	user, err := s.GetUserByEmail(email)
+	if err != nil {
+		return nil, fmt.Errorf("User Not Found")
+	}
+	if user.IsVerified {
+		return user, nil
+	}
+
+	if user.VerifyCode != verificationCode {
+		return nil, fmt.Errorf("Invalid Verification Code")
+	}
+
+	if time.Now().After(user.CodeExpiry) {
+		return nil, fmt.Errorf("verification code has expired")
+	}
+
+	user.IsVerified = true
+	user.VerifyCode = ""
+
+	if err := db.DB.Save(user).Error; err != nil {
+		return nil, fmt.Errorf("failed to update user verification status: %w", err)
+	}
+
+	logger.Info("User %s successfully verified", user.Email)
+	return user, nil
 }

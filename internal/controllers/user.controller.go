@@ -103,7 +103,8 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"users":   user,
+		"message": "User created successfully. Please check your email for verification code.",
+		"user":    user,
 	})
 
 	return
@@ -137,6 +138,16 @@ func (uc *UserController) LoginUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
+		})
+		return
+	}
+
+	// Check if user is verified
+	if !userFound.IsVerified {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "Please verify your email before logging in",
+			"user_id": userFound.ID.String(),
 		})
 		return
 	}
@@ -437,5 +448,66 @@ func (uc *UserController) PermanentlyDeleteUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "User permanently deleted",
+	})
+}
+
+// ResendVerificationEmail resends verification email to a user
+func (uc *UserController) ResendVerificationEmail(ctx *gin.Context) {
+	var request struct {
+		Email string `json:"email" binding:"required,email"`
+	}
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	emailResponse, err := uc.UserService.ResendVerificationEmail(request.Email)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+			"message": emailResponse.Message,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": emailResponse.Message,
+	})
+}
+
+// VerifyUser verifies a user with the provided verification code
+func (uc *UserController) VerifyUser(ctx *gin.Context) {
+	var request struct {
+		Email            string `json:"email" binding:"required,email"`
+		VerificationCode string `json:"verification_code" binding:"required,len=4"`
+	}
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	user, err := uc.UserService.VerifyUser(request.Email, request.VerificationCode)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "User verified successfully",
+		"user":    user,
 	})
 }
