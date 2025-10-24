@@ -6,6 +6,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type FileVisibility string
+
+const (
+	Private FileVisibility = "private"
+	Shared  FileVisibility = "shared"
+	Public  FileVisibility = "public"
+)
+
 type File struct {
 	Id       uuid.UUID  `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
 	FolderId *uuid.UUID `gorm:"type:uuid" json:"folder_id,omitempty"`
@@ -16,9 +24,13 @@ type File struct {
 	FileSize int64  `json:"file_size"`
 	FileUrl  string `gorm:"not null" json:"file_url"`
 
+	Visibility FileVisibility `gorm:"type:varchar(20);default:'private'" json:"visibility"`
+
 	UploadedById uuid.UUID `gorm:"type:uuid;not null" json:"uploaded_by"`
 	UploadedBy   User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"-"`
 
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+
+	AccessList []FileAccess `gorm:"foreignKey:FileId;constraint:OnDelete:CASCADE;" json:"access_list,omitempty"`
 }
