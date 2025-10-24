@@ -33,6 +33,16 @@ func (f *FileService) GetFile(id string) (*schema.File, error) {
 	return file, nil
 }
 
+func (f *FileService) GetUserFile(id string, userId string) (*schema.File, error) {
+	var file *schema.File
+	result := db.DB.Find(&file).Where("id = ? AND uploaded_by = ?", file.FileName, userId)
+	if result.Error != nil {
+		logger.Error("Failed to get  the file %s ", result.Error)
+		return nil, result.Error
+	}
+	return file, nil
+}
+
 func (f *FileService) CreateFile(file *schema.File, userId string) (*schema.File, error) {
 	var existingFile *schema.File
 	result := db.DB.Find(&existingFile).Where("file_name = ? AND uploaded_by = ?", file.FileName, userId)
@@ -47,4 +57,18 @@ func (f *FileService) CreateFile(file *schema.File, userId string) (*schema.File
 	}
 
 	return file, nil
+}
+
+func (f *FileService) DeleteFile(fileId string, userId string) (message string, err error) {
+	fileFound, err := f.GetUserFile(fileId, userId)
+	if err != nil {
+		logger.Error("Failed to get the file  with the fileId %s ", err.Error())
+		return "Failed to delete file", err
+	}
+
+	if err := db.DB.Delete(fileFound).Error; err != nil {
+		logger.Error("Failed to delete the file  with the fileId %s ", err.Error())
+		return "Failed to delete file", err
+	}
+	return "File Deleted Successfully", nil
 }

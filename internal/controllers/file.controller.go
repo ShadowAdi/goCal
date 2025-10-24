@@ -92,7 +92,7 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 		return
 	}
 
-	_, loggedInUserError := fc.UserService.GetUser(userIdStr)
+	loggedInUserFound, loggedInUserError := fc.UserService.GetUser(userIdStr)
 	if loggedInUserError != nil {
 		logger.Error("Error finding logged-in user: %v\n", loggedInUserError)
 		ctx.JSON(http.StatusNotFound, gin.H{
@@ -100,6 +100,13 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 			"error":   loggedInUserError.Error(),
 		})
 		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
 	}
 
 	file, error := fc.FileService.CreateFile(newFile, userIdStr)
@@ -118,5 +125,68 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 		"message": "File Created",
 		"file":    file,
 	})
+
+}
+
+func (fc *FileController) DeleteFile(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		logger.Error("Failed to get the id in the request ", id)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Failed to get the id of the request",
+		})
+	}
+
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Not Authorized",
+		})
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok || userIdStr == "" {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	loggedInUserFound, loggedInUserError := fc.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		logger.Error("Error finding logged-in user: %v\n", loggedInUserError)
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
+	}
+
+	message, err := fc.FileService.DeleteFile(id, userIdStr)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   err.Error(),
+			"message": message,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "File Deleted Successfully",
+	})
+
+	return
 
 }

@@ -14,4 +14,6 @@ func FileRoutes(router *gin.RouterGroup) {
 	router.GET("/", fileController.GetAllFiles)
 	router.GET("/:id", fileController.GetFile)
 	router.POST("/", fileController.CreateFile)
+	router.DELETE("/:id", fileController.DeleteFile)
+
 }
