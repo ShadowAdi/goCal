@@ -32,3 +32,19 @@ func (f *FileService) GetFile(id string) (*schema.File, error) {
 	}
 	return file, nil
 }
+
+func (f *FileService) CreateFile(file *schema.File, userId string) (*schema.File, error) {
+	var existingFile *schema.File
+	result := db.DB.Find(&existingFile).Where("file_name = ? AND uploaded_by = ?", file.FileName, userId)
+	if result.Error == nil {
+		logger.Error("File With same name already Exists. Choose another One %s ", result.Error)
+		return nil, result.Error
+	}
+
+	resultFileCreation := db.DB.Create(file)
+	if resultFileCreation.Error != nil {
+		logger.Error("Failed to create file %s", resultFileCreation.Error)
+	}
+
+	return file, nil
+}
