@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type FileVisibility string
@@ -33,4 +34,20 @@ type File struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 
 	AccessList []FileAccess `gorm:"foreignKey:FileId;constraint:OnDelete:CASCADE;" json:"access_list,omitempty"`
+}
+
+type UpdateFileRequest struct {
+	FileName *string `json:"file_name,omitempty" validate:"omitempty,min=3,max=50"`
+	FileType *string `json:"file_type"`
+	FileSize *int64  `json:"file_size"`
+	FileUrl  string  `gorm:"not null" json:"file_url"`
+}
+
+func (File) TableName() string {
+	return "files"
+}
+
+func (fc *File) BeforeCreate(tx *gorm.DB) (err error) {
+	fc.Id = uuid.New()
+	return nil
 }

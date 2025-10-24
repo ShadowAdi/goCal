@@ -72,3 +72,7 @@ func (f *FileService) DeleteFile(fileId string, userId string) (message string, 
 	}
 	return "File Deleted Successfully", nil
 }
+
+func (f *FileService) UpdateFile(fileId string, userId string) (message string, err error) {
+	return "", nil
+}
