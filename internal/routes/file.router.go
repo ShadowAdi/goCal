@@ -1,7 +1,14 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"goCal/internal/controllers"
+	"goCal/internal/services"
+
+	"github.com/gin-gonic/gin"
+)
 
 func FileRoutes(router *gin.RouterGroup) {
-	router.GET("/")
+	fileService := services.NewFileService()
+	fileController := controllers.NewFileController(fileService)
+	router.GET("/", fileController.GetAllFiles)
 }
