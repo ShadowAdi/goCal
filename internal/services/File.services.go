@@ -73,6 +73,31 @@ func (f *FileService) DeleteFile(fileId string, userId string) (message string, 
 	return "File Deleted Successfully", nil
 }
 
-func (f *FileService) UpdateFile(fileId string, userId string) (message string, err error) {
-	return "", nil
+func (f *FileService) UpdateFile(fileId string, userId string, updateFile *schema.UpdateFileRequest) (message *schema.File, err error) {
+	_, errFile := f.GetUserFile(fileId, userId)
+	if errFile != nil {
+		logger.Error("Failed to get the file  with the fileId %s ", err.Error())
+		return nil, errFile
+	}
+	updateFields := make(map[string]interface{})
+
+	if updateFile.FileName != nil {
+		updateFields["file_name"] = *updateFile.FileName
+	}
+
+	if updateFile.FileSize != nil {
+		updateFields["file_size"] = *updateFile.FileSize
+	}
+
+	if updateFile.FileType != nil {
+		updateFields["file_type"] = *updateFile.FileType
+	}
+
+	if len(updateFields) > 0 {
+		if err := db.DB.Model(&schema.File{}).Where("id = ?", fileId).Updates(updateFields).Error; err != nil {
+			return nil, err
+		}
+	}
+
+	return f.GetFile(fileId)
 }

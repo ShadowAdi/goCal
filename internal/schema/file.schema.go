@@ -40,7 +40,6 @@ type UpdateFileRequest struct {
 	FileName *string `json:"file_name,omitempty" validate:"omitempty,min=3,max=50"`
 	FileType *string `json:"file_type"`
 	FileSize *int64  `json:"file_size"`
-	FileUrl  string  `gorm:"not null" json:"file_url"`
 }
 
 func (File) TableName() string {

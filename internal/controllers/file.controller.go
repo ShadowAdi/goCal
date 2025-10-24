@@ -190,3 +190,74 @@ func (fc *FileController) DeleteFile(ctx *gin.Context) {
 	return
 
 }
+
+func (fc *FileController) UpdateFile(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		logger.Error("Failed to get the id in the request ", id)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Failed to get the id of the request",
+		})
+	}
+
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Not Authorized",
+		})
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok || userIdStr == "" {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	loggedInUserFound, loggedInUserError := fc.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
+	}
+
+	var updateRequest *schema.UpdateFileRequest
+	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	updateFile, updateFileError := fc.FileService.UpdateFile(id, userIdStr, updateRequest)
+	if updateFileError != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   updateFileError.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "File Updated Successfully",
+		"file":    updateFile,
+	})
+
+	return
+
+}

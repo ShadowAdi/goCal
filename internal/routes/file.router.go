@@ -2,6 +2,7 @@ package routes
 
 import (
 	"goCal/internal/controllers"
+	"goCal/internal/middleware"
 	"goCal/internal/services"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,10 @@ func FileRoutes(router *gin.RouterGroup) {
 	fileController := controllers.NewFileController(fileService, userService)
 	router.GET("/", fileController.GetAllFiles)
 	router.GET("/:id", fileController.GetFile)
-	router.POST("/", fileController.CreateFile)
-	router.DELETE("/:id", fileController.DeleteFile)
+	protectedRoutes := router.Group("/")
+	protectedRoutes.Use(middleware.AuthMiddleware())
 
+	router.POST("/", fileController.CreateFile)
+	router.DELETE("/file/:id", fileController.DeleteFile)
+	router.PATCH("/file/:id", fileController.UpdateFile)
 }
