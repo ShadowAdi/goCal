@@ -7,9 +7,9 @@ import (
 )
 
 type File struct {
-	Id       uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
-	FolderId uuid.UUID `gorm:"type:uuid;not null" json:"folder_id"`
-	Folder   Folder    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
+	Id       uuid.UUID  `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
+	FolderId *uuid.UUID `gorm:"type:uuid" json:"folder_id,omitempty"`
+	Folder   *Folder    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"folder,omitempty"`
 
 	FileName string `gorm:"not null;size:255" json:"file_name"`
 	FileType string `gorm:"size:100" json:"file_type"`
