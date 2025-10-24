@@ -11,4 +11,6 @@ func FileRoutes(router *gin.RouterGroup) {
 	fileService := services.NewFileService()
 	fileController := controllers.NewFileController(fileService)
 	router.GET("/", fileController.GetAllFiles)
+	router.GET("/:id", fileController.GetFile)
+
 }

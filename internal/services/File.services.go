@@ -22,3 +22,13 @@ func (f *FileService) GetFiles() ([]*schema.File, error) {
 	}
 	return files, nil
 }
+
+func (f *FileService) GetFile(id string) (*schema.File, error) {
+	var file *schema.File
+	result := db.DB.Find(&file).Where("id = ?", id)
+	if result.Error != nil {
+		logger.Error("Failed to get  the file %s ", result.Error)
+		return nil, result.Error
+	}
+	return file, nil
+}
