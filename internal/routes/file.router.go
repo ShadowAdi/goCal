@@ -9,8 +9,9 @@ import (
 
 func FileRoutes(router *gin.RouterGroup) {
 	fileService := services.NewFileService()
-	fileController := controllers.NewFileController(fileService)
+	userService := services.NewUserService()
+	fileController := controllers.NewFileController(fileService, userService)
 	router.GET("/", fileController.GetAllFiles)
 	router.GET("/:id", fileController.GetFile)
-
+	router.POST("/", fileController.CreateFile)
 }
