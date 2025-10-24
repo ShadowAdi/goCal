@@ -9,4 +9,6 @@ type Folder struct {
 	FolderTags        []string  `gorm:"type:text[];default:[]" json:"folder_tags"`
 	CreatedById       uuid.UUID `gorm:"type:uuid;not null" json:"created_by"`
 	createdBy         User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:OnDelete;" json:"-"`
+
+	Files []File `gorm:"foreignKey:FolderId" json:"files"`
 }
