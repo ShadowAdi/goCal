@@ -1,6 +1,9 @@
 package schema
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type Folder struct {
 	ID                uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
@@ -11,4 +14,19 @@ type Folder struct {
 	createdBy         User      `gorm:"constraint:OnDelete:OnDelete;" json:"-"`
 
 	Files []File `gorm:"foreignKey:FolderId" json:"files"`
+}
+
+type UpdateFolderRequest struct {
+	FolderName        *string   `json:"folder_name,omitempty" validate:"omitempty,min=3,max=50"`
+	FolderDescription *string   `json:"folder_description"`
+	FolderTags        []*string `json:"folder_tags"`
+}
+
+func (Folder) TableName() string {
+	return "folders"
+}
+
+func (fo *Folder) BeforeCreate(tx *gorm.DB) (err error) {
+	fo.ID = uuid.New()
+	return nil
 }

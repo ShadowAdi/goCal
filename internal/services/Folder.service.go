@@ -74,6 +74,5 @@ func (fo *FolderService) DeleteFolder(folderId string, userId string) (message s
 		return "Failed to delete folder", deleteError
 	}
 
-	return "Folder Deleted Successfully", err
-
+	return "Folder Deleted Successfully", nil
 }
