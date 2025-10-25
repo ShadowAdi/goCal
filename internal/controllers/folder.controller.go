@@ -37,3 +37,28 @@ func (fo *FolderController) GetAllFolders(ctx *gin.Context) {
 	})
 	return
 }
+
+func (fo *FolderController) GetFolder(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Folder Id Not Provided",
+		})
+	}
+	folderFound, err := fo.FolderService.GetFolder(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err,
+			"message": "Failed to get the folder",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"folder":  folderFound,
+	})
+	return
+}
