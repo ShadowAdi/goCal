@@ -76,3 +76,39 @@ func (fo *FolderService) DeleteFolder(folderId string, userId string) (message s
 
 	return "Folder Deleted Successfully", nil
 }
+
+func (fo *FolderService) UpdateFolder(updatedData *schema.UpdateFolderRequest, folderId string, userId string) (folder *schema.Folder, err error) {
+	_, err = fo.GetUserFolder(folderId, userId)
+	if err != nil {
+		logger.Error("Failed to get the folder %s", err)
+		return nil, err
+	}
+
+	updateFields := make(map[string]interface{})
+
+	if updatedData.FolderName != nil {
+		updateFields["folder_name"] = *updatedData.FolderName
+	}
+
+	if updatedData.FolderDescription != nil {
+		updateFields["folder_description"] = *updatedData.FolderDescription
+	}
+
+	if updatedData.FolderTags != nil {
+		updateFields["folder_tags"] = updatedData.FolderTags
+	}
+
+	if len(updateFields) > 0 {
+		if result := db.DB.Model(&schema.Folder{}).Where("id = ? AND created_by = ?", folderId, userId).Updates(updateFields); result.Error != nil {
+			return nil, result.Error
+		}
+	}
+
+	getUpdatedFolder, errUpdatedFolder := fo.GetUserFolder(folderId, userId)
+	if errUpdatedFolder != nil {
+		logger.Error("Failed to get the updated folder %s", err)
+		return nil, errUpdatedFolder
+	}
+
+	return getUpdatedFolder, nil
+}

@@ -94,7 +94,7 @@ func (f *FileService) UpdateFile(fileId string, userId string, updateFile *schem
 	}
 
 	if len(updateFields) > 0 {
-		if err := db.DB.Model(&schema.File{}).Where("id = ?", fileId).Updates(updateFields).Error; err != nil {
+		if err := db.DB.Model(&schema.File{}).Where("id = ? AND uploaded_by = ?", fileId, userId).Updates(updateFields).Error; err != nil {
 			return nil, err
 		}
 	}
