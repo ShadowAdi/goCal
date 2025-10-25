@@ -33,3 +33,14 @@ func (fo *FolderService) GetFolder(folderId string) (*schema.Folder, error) {
 	}
 	return folder, nil
 }
+
+func (fo *FolderService) GetUserFolder(folderId string, userId string) (*schema.Folder, error) {
+	var folder *schema.Folder
+
+	result := db.DB.Find(&folder).Where("id = ? AND created_by = ?", folderId, userId)
+	if result.Error != nil {
+		logger.Error("Failed to get the folder %s ", result.Error)
+		return nil, result.Error
+	}
+	return folder, nil
+}
