@@ -22,3 +22,14 @@ func (fo *FolderService) GetFolders() ([]*schema.Folder, error) {
 	}
 	return folders, nil
 }
+
+func (fo *FolderService) GetFolder(folderId string) (*schema.Folder, error) {
+	var folder *schema.Folder
+
+	result := db.DB.Find(&folder).Where("id = ?", folderId)
+	if result.Error != nil {
+		logger.Error("Failed to get the folder %s ", result.Error)
+		return nil, result.Error
+	}
+	return folder, nil
+}
