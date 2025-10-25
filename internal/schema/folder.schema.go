@@ -8,7 +8,7 @@ type Folder struct {
 	FolderDescription string    `gorm:"not null;size:500" json:"folder_description"`
 	FolderTags        []string  `gorm:"type:text[];default:[]" json:"folder_tags"`
 	CreatedById       uuid.UUID `gorm:"type:uuid;not null" json:"created_by"`
-	createdBy         User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:OnDelete;" json:"-"`
+	createdBy         User      `gorm:"constraint:OnDelete:OnDelete;" json:"-"`
 
 	Files []File `gorm:"foreignKey:FolderId" json:"files"`
 }

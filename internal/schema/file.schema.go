@@ -18,7 +18,7 @@ const (
 type File struct {
 	Id       uuid.UUID  `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
 	FolderId *uuid.UUID `gorm:"type:uuid" json:"folder_id,omitempty"`
-	Folder   *Folder    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"folder,omitempty"`
+	Folder   *Folder    `gorm:"constraint:OnDelete:CASCADE" json:"folder,omitempty"`
 
 	FileName string `gorm:"not null;size:255" json:"file_name"`
 	FileType string `gorm:"size:100" json:"file_type"`
@@ -28,7 +28,7 @@ type File struct {
 	Visibility FileVisibility `gorm:"type:varchar(20);default:'private'" json:"visibility"`
 
 	UploadedById uuid.UUID `gorm:"type:uuid;not null" json:"uploaded_by"`
-	UploadedBy   User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"-"`
+	UploadedBy   User      `gorm:"constraint:OnDelete:CASCADE;" json:"-"`
 
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`

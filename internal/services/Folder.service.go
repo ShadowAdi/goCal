@@ -61,3 +61,19 @@ func (fo *FolderService) CreateFolder(folder *schema.Folder, userId string) (*sc
 	}
 	return folder, nil
 }
+
+func (fo *FolderService) DeleteFolder(folderId string, userId string) (message string, err error) {
+	folderFound, err := fo.GetUserFolder(folderId, userId)
+	if err != nil {
+		logger.Error("Failed to get the folder %s", err)
+		return "Failed to get the folder ", err
+	}
+
+	if deleteError := db.DB.Delete(folderFound).Error; err != nil {
+		logger.Error("Failed to delete the folder %s ", deleteError)
+		return "Failed to delete folder", deleteError
+	}
+
+	return "Folder Deleted Successfully", err
+
+}
