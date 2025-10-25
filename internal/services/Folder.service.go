@@ -44,3 +44,20 @@ func (fo *FolderService) GetUserFolder(folderId string, userId string) (*schema.
 	}
 	return folder, nil
 }
+
+func (fo *FolderService) CreateFolder(folder *schema.Folder, userId string) (*schema.Folder, error) {
+	var existingFolder *schema.Folder
+
+	result := db.DB.Find(&existingFolder).Where("folder_name = ? AND created_by = ?", folder.FolderName, userId)
+	if result.Error == nil {
+		logger.Error("Folder Already Exists %s ", result.Error)
+		return nil, result.Error
+	}
+
+	resultFolderCreation := db.DB.Create(folder)
+	if resultFolderCreation.Error != nil {
+		logger.Error("Failed to create folder %s ", resultFolderCreation.Error)
+		return nil, result.Error
+	}
+	return folder, nil
+}
