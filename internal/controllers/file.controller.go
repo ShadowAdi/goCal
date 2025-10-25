@@ -126,6 +126,7 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 		"file":    file,
 	})
 
+	return
 }
 
 func (fc *FileController) DeleteFile(ctx *gin.Context) {
