@@ -17,7 +17,7 @@ func FileRoutes(router *gin.RouterGroup) {
 	protectedRoutes := router.Group("/")
 	protectedRoutes.Use(middleware.AuthMiddleware())
 
-	router.POST("/", fileController.CreateFile)
-	router.DELETE("/file/:id", fileController.DeleteFile)
-	router.PATCH("/file/:id", fileController.UpdateFile)
+	protectedRoutes.POST("/", fileController.CreateFile)
+	protectedRoutes.DELETE("/file/:id", fileController.DeleteFile)
+	protectedRoutes.PATCH("/file/:id", fileController.UpdateFile)
 }
