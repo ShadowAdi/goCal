@@ -14,39 +14,38 @@ var storageBucketAlbums storage_go.Bucket
 var storageBucketDocs storage_go.Bucket
 var storageBucketOthers storage_go.Bucket
 
+func ensureBucket(name string) {
+	_, err := storageClient.GetBucket(name)
+	if err == nil {
+		fmt.Printf("Bucket %s already exists\n", name)
+		return
+	}
+
+	// If not found, create it
+	_, err = storageClient.CreateBucket(name, storage_go.BucketOptions{
+		Public:        true,
+		FileSizeLimit: "1000",
+	})
+	if err != nil {
+		logger.Error(fmt.Sprintf("Failed to create bucket %s: %v", name, err))
+		return
+	}
+	fmt.Printf("Bucket %s created successfully\n", name)
+}
+
 func StorageInit() {
-	SUPABASE_PROJECT_URL := os.Getenv("SUPABASE_PROJECT_URL")
-	if SUPABASE_PROJECT_URL == "" {
-		logger.Error(`Failed to get the SUPABASE Project Url`)
-		fmt.Printf(`Failed to get the SUPABASE Project Url`)
+	url := os.Getenv("SUPABASE_PROJECT_URL")
+	key := os.Getenv("SUPABASE_PROJECT_KEY")
+
+	if url == "" || key == "" {
+		logger.Error("Missing Supabase credentials")
+		return
 	}
 
-	SUPABASE_PROJECT_KEY := os.Getenv("SUPABASE_PROJECT_KEY")
-	if SUPABASE_PROJECT_KEY == "" {
-		logger.Error(`Failed to get the SUPABASE Project Key`)
-		fmt.Printf(`Failed to get the SUPABASE Project Key`)
-	}
+	storageClient = storage_go.NewClient(url, key, nil)
 
-	storageClient = storage_go.NewClient(SUPABASE_PROJECT_URL, SUPABASE_PROJECT_KEY, nil)
-
-	var storageBucketAlbumError error
-	storageBucketAlbums, storageBucketAlbumError = storageClient.CreateBucket("goCal-Albums-Bucket", storage_go.BucketOptions{
-		Public:        true,
-		FileSizeLimit: "10",
-	})
-	if storageBucketAlbumError != nil {
-		logger.Error("Failed to create Albums bucket: " + storageBucketAlbumError.Error())
-		fmt.Printf("Failed to create Albums bucket: %v", storageBucketAlbumError)
-	}
-
-	var storageBucketDocsError error
-	storageBucketDocs, storageBucketDocsError = storageClient.CreateBucket("goCal-Docs-Bucket", storage_go.BucketOptions{
-		Public:        true,
-		FileSizeLimit: "10",
-	})
-	if storageBucketDocsError != nil {
-		logger.Error("Failed to create Albums bucket: " + storageBucketDocsError.Error())
-		fmt.Printf("Failed to create Albums bucket: %v", storageBucketDocsError)
-	}
-
+	ensureBucket("goCal-Other-Bucket")
+	ensureBucket("goCal-Docs-Bucket")
+	ensureBucket("goCal-Albums-Bucket")
+	ensureBucket("goCal-Videos-Bucket")
 }
