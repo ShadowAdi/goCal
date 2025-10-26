@@ -14,5 +14,9 @@ func FolderRoutes(router *gin.RouterGroup) {
 	folderController := controllers.NewFolderController(folderService, userService, fileService)
 
 	router.GET("/", folderController.GetAllFolders)
+	router.GET("/:id", folderController.GetFolder)
+	router.POST("/", folderController.CreateFolder)
+	router.PATCH("/folder/:id", folderController.UpdateFolder)
+	router.DELETE("/folder/:id", folderController.DeleteFolder)
 
 }
