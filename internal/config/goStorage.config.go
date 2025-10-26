@@ -9,10 +9,10 @@ import (
 )
 
 var storageClient *storage_go.Client
-var storageBucketVideos *storage_go.Bucket
-var storageBucketAlbums *storage_go.Bucket
-var storageBucketDocs *storage_go.Bucket
-var storageBucketOthers *storage_go.Bucket
+var storageBucketVideos storage_go.Bucket
+var storageBucketAlbums storage_go.Bucket
+var storageBucketDocs storage_go.Bucket
+var storageBucketOthers storage_go.Bucket
 
 func StorageInit() {
 	SUPABASE_PROJECT_URL := os.Getenv("SUPABASE_PROJECT_URL")
@@ -28,5 +28,25 @@ func StorageInit() {
 	}
 
 	storageClient = storage_go.NewClient(SUPABASE_PROJECT_URL, SUPABASE_PROJECT_KEY, nil)
+
+	var storageBucketAlbumError error
+	storageBucketAlbums, storageBucketAlbumError = storageClient.CreateBucket("goCal-Albums-Bucket", storage_go.BucketOptions{
+		Public:        true,
+		FileSizeLimit: "10",
+	})
+	if storageBucketAlbumError != nil {
+		logger.Error("Failed to create Albums bucket: " + storageBucketAlbumError.Error())
+		fmt.Printf("Failed to create Albums bucket: %v", storageBucketAlbumError)
+	}
+
+	var storageBucketDocsError error
+	storageBucketDocs, storageBucketDocsError = storageClient.CreateBucket("goCal-Docs-Bucket", storage_go.BucketOptions{
+		Public:        true,
+		FileSizeLimit: "10",
+	})
+	if storageBucketDocsError != nil {
+		logger.Error("Failed to create Albums bucket: " + storageBucketDocsError.Error())
+		fmt.Printf("Failed to create Albums bucket: %v", storageBucketDocsError)
+	}
 
 }
