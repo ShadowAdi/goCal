@@ -9,6 +9,10 @@ import (
 )
 
 var storageClient *storage_go.Client
+var storageBucketVideos *storage_go.Bucket
+var storageBucketAlbums *storage_go.Bucket
+var storageBucketDocs *storage_go.Bucket
+var storageBucketOthers *storage_go.Bucket
 
 func StorageInit() {
 	SUPABASE_PROJECT_URL := os.Getenv("SUPABASE_PROJECT_URL")
