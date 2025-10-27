@@ -43,7 +43,7 @@ func StorageInit() {
 		return
 	}
 
-	storageClient = storage_go.NewClient(url, key, nil)
+	storageClient = storage_go.NewClient(url+"/storage/v1", key, nil)
 
 	ensureBucket("goCal-Other-Bucket")
 	ensureBucket("goCal-Docs-Bucket")
