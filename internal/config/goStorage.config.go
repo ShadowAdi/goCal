@@ -25,7 +25,7 @@ func ensureBucket(name string) {
 	// If not found, create it
 	_, err = storageClient.CreateBucket(name, storage_go.BucketOptions{
 		Public:        true,
-		FileSizeLimit: "1000",
+		FileSizeLimit: "100",
 	})
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to create bucket %s: %v", name, err))
