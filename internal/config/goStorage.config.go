@@ -51,3 +51,7 @@ func StorageInit() {
 	ensureBucket("goCal-Audios-Bucket")
 	ensureBucket("goCal-Videos-Bucket")
 }
+
+func GetStorageClient() *storage_go.Client {
+	return storageClient
+}
