@@ -13,7 +13,7 @@ func NewFileStorageService() *FileStorageService {
 	return &FileStorageService{}
 }
 
-func (nfs *FileStorageService) UploadSingleFile(userId string, fileName string, file io.Reader, fileType string) error {
+func (nfs *FileStorageService) UploadFile(userId string, fileName string, file io.Reader, fileType string) error {
 	if userId == "" {
 		logger.Error("Failed to get the userId UnAuthorized")
 		return errors.New("Unauthorized User. UserId Not Found")
