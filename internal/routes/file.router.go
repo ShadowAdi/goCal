@@ -6,12 +6,14 @@ import (
 	"goCal/internal/services"
 
 	"github.com/gin-gonic/gin"
+	storage_go "github.com/supabase-community/storage-go"
 )
 
 func FileRoutes(router *gin.RouterGroup) {
 	fileService := services.NewFileService()
 	userService := services.NewUserService()
-	fileController := controllers.NewFileController(fileService, userService)
+	newFileStorageService := services.NewFileStorageService(&storage_go.Client{})
+	fileController := controllers.NewFileController(fileService, userService, newFileStorageService)
 	router.GET("/", fileController.GetAllFiles)
 	router.GET("/:id", fileController.GetFile)
 	protectedRoutes := router.Group("/")
