@@ -11,6 +11,7 @@ import (
 var storageClient *storage_go.Client
 var storageBucketVideos storage_go.Bucket
 var storageBucketAlbums storage_go.Bucket
+var storageBucketAudios storage_go.Bucket
 var storageBucketDocs storage_go.Bucket
 var storageBucketOthers storage_go.Bucket
 
@@ -47,5 +48,6 @@ func StorageInit() {
 	ensureBucket("goCal-Other-Bucket")
 	ensureBucket("goCal-Docs-Bucket")
 	ensureBucket("goCal-Albums-Bucket")
+	ensureBucket("goCal-Audios-Bucket")
 	ensureBucket("goCal-Videos-Bucket")
 }

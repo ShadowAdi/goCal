@@ -83,6 +83,15 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 		return
 	}
 
+	_, fileError := ctx.FormFile("file")
+	if fileError != nil {
+		logger.Error("Failed to get the file %v", fileError)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Failed to get the file %s " + fileError.Error(),
+		})
+	}
+
 	var newFile *schema.File
 	if err := ctx.ShouldBindJSON(&newFile); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
