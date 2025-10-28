@@ -49,3 +49,31 @@
 {"time":"2025-10-28T16:21:22.6774384+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-28T16:21:23.1354667+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-28T16:21:23.651626+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:23:02.4500027+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"ERROR: relation \"files\" does not exist (SQLSTATE 42P01)"}
+{"time":"2025-10-28T16:26:02.0399204+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:02.6740848+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:03.3090067+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:03.9233289+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:04.4439947+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:08.8682534+05:30","level":"ERROR","msg":"Failed to auto-migrate tables: %w","!BADKEY":"ERROR: syntax error at or near \"[\" (SQLSTATE 42601)"}
+{"time":"2025-10-28T16:26:43.3841369+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:43.9396668+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:44.4777643+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:44.9663905+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:45.4657842+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:26:49.0680463+05:30","level":"ERROR","msg":"Failed to auto-migrate tables: %w","!BADKEY":"ERROR: syntax error at or near \"[\" (SQLSTATE 42601)"}
+{"time":"2025-10-28T16:28:30.8096914+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:28:31.3870808+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:28:31.8551804+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:28:32.3441558+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:28:32.8702744+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:30:42.564835+05:30","level":"ERROR","msg":"Failed to parse multipart form: multipart: NextPart: EOF"}
+{"time":"2025-10-28T16:40:34.619192+05:30","level":"ERROR","msg":"Failed to get User  %w with id %s","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host","!BADKEY":"6a8b07ed-9e1f-44dd-9d7f-dfdb4684e339"}
+{"time":"2025-10-28T16:40:34.6197316+05:30","level":"ERROR","msg":"Error finding logged-in user: %v\n","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-28T16:49:59.917562+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:50:01.1418899+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:50:01.8468339+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:50:02.3869813+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:50:04.3020593+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:50:48.5389242+05:30","level":"ERROR","msg":"Failed to upload file to supabase <nil> "}
+{"time":"2025-10-28T16:50:48.9626027+05:30","level":"ERROR","msg":"File With same name already Exists. Choose another One %s ","!BADKEY":null}

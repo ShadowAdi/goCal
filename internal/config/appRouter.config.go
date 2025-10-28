@@ -10,6 +10,9 @@ var mainRouter *gin.Engine
 
 func InitRouter() *gin.Engine {
 	mainRouter = gin.Default()
+
+	storageClient := GetStorageClient()
+
 	healthRouter := mainRouter.Group("/api/health")
 	routes.RegisterHealthRoute(healthRouter)
 
@@ -17,7 +20,7 @@ func InitRouter() *gin.Engine {
 	routes.UserRoutes(userRouter)
 
 	fileRouter := mainRouter.Group("/api/file")
-	routes.FileRoutes(fileRouter)
+	routes.FileRoutes(fileRouter, storageClient)
 
 	return mainRouter
 }

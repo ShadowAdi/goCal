@@ -77,6 +77,7 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 			"success": false,
 			"error":   "Not Authorized",
 		})
+		return
 	}
 
 	userIdStr, ok := userId.(string)
@@ -103,6 +104,7 @@ func (fc *FileController) CreateFile(ctx *gin.Context) {
 			"success": false,
 			"error":   "User Is Not Verified",
 		})
+		return
 	}
 
 	if errParseForm := ctx.Request.ParseMultipartForm(100 << 20); errParseForm != nil {

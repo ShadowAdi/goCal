@@ -53,3 +53,11 @@
 {"time":"2025-10-28T16:21:28.9577034+05:30","level":"INFO","msg":"msg","Database connected":null}
 {"time":"2025-10-28T16:21:28.9601927+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
 {"time":"2025-10-28T16:21:29.0095268+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-28T16:28:37.827854+05:30","level":"INFO","msg":"msg","Database connected":null}
+{"time":"2025-10-28T16:28:37.8403346+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-28T16:28:37.8408427+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-28T16:40:49.9407806+05:30","level":"INFO","msg":"msg","Uploading file 6a8b07ed-9e1f-44dd-9d7f-dfdb4684e3391761649849_g4236.png to bucket: goCal-Albums-Bucket":null}
+{"time":"2025-10-28T16:50:22.1563829+05:30","level":"INFO","msg":"msg","Database connected":null}
+{"time":"2025-10-28T16:50:22.1603407+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-28T16:50:22.1634559+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-28T16:50:48.078398+05:30","level":"INFO","msg":"msg","Uploading file 6a8b07ed-9e1f-44dd-9d7f-dfdb4684e3391761650448_g4236.png to bucket: goCal-Albums-Bucket":null}
