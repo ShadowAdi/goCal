@@ -33,7 +33,7 @@ type File struct {
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 
-	AccessList []FileAccess `gorm:"foreignKey:FileId;constraint:OnDelete:CASCADE;" json:"access_list,omitempty"`
+	AccessList []FileAccess `gorm:"foreignKey:FileID;constraint:OnDelete:CASCADE;" json:"access_list,omitempty"`
 }
 
 type UpdateFileRequest struct {

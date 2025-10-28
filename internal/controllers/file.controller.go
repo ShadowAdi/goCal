@@ -32,6 +32,7 @@ func (fc *FileController) GetAllFiles(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
