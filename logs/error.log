@@ -34,3 +34,12 @@
 {"time":"2025-10-27T11:49:52.9838104+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-27T11:49:53.5413769+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-27T11:49:53.5641627+05:30","level":"ERROR","msg":"Failed to connect to DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-28T16:08:54.0047949+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:08:54.6303349+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:08:55.2253164+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:08:55.7550404+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:08:56.2554202+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:08:56.2889662+05:30","level":"ERROR","msg":"Failed to connect to DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-28T16:13:39.2308141+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
+{"time":"2025-10-28T16:13:51.759785+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
+{"time":"2025-10-28T16:16:48.2588014+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
