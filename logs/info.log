@@ -50,3 +50,6 @@
 {"time":"2025-10-28T16:10:59.4385956+05:30","level":"INFO","msg":"msg","Verification email sent successfully to: %s":["shadowshukla76@gmail.com"]}
 {"time":"2025-10-28T16:10:59.4395981+05:30","level":"INFO","msg":"msg","Verification email queued for user %s: %s":["shadowshukla76@gmail.com","Verification email sent successfully"]}
 {"time":"2025-10-28T16:12:10.6943445+05:30","level":"INFO","msg":"msg","User %s successfully verified":["shadowshukla76@gmail.com"]}
+{"time":"2025-10-28T16:21:28.9577034+05:30","level":"INFO","msg":"msg","Database connected":null}
+{"time":"2025-10-28T16:21:28.9601927+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-28T16:21:29.0095268+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}

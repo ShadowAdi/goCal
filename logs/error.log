@@ -43,3 +43,9 @@
 {"time":"2025-10-28T16:13:39.2308141+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
 {"time":"2025-10-28T16:13:51.759785+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
 {"time":"2025-10-28T16:16:48.2588014+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
+{"time":"2025-10-28T16:21:06.0684812+05:30","level":"ERROR","msg":"Failed to get all the files %s ","!BADKEY":"invalid field found for struct goCal/internal/schema.File's field AccessList: define a valid foreign key for relations or implement the Valuer/Scanner interface"}
+{"time":"2025-10-28T16:21:21.701808+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:21:22.1925409+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:21:22.6774384+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:21:23.1354667+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-28T16:21:23.651626+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
