@@ -67,3 +67,18 @@ func (fo *FolderService) CreateFolder(userId string, folderData *schema.Folder) 
 	}
 	return fo.GetFolderByNameForUser(existingFolder.FolderName, userId)
 }
+
+func (fo *FolderService) DeleteFolder(userId string, folderId string) (string, error) {
+	var existingFolder *schema.Folder
+	errFoundFolder := db.DB.Where("id = ? AND created_by = ?", folderId, userId).First(&existingFolder).Error
+
+	if errFoundFolder != nil {
+		return "Failed to Delete Folder. Folder Not Found", errFoundFolder
+	}
+
+	result := db.DB.Delete(&existingFolder)
+	if result.Error != nil {
+		return "Failed to delete Folder.", result.Error
+	}
+	return "Folder Deleted Successfully", nil
+}
