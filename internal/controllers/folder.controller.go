@@ -179,21 +179,31 @@ func (fo FolderController) UpdateFolder(ctx *gin.Context) {
 		})
 	}
 
-	var existingFolder *schema.Folder
-	if err := ctx.ShouldBindJSON(&existingFolder); err != nil {
+	var updateRequest *schema.UpdateFolderRequest
+	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"error":   "Failed to parse the folder",
+			"error":   err.Error(),
 		})
 		return
 	}
 
-	if existingFolder == nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
+	updatedFolder, error := fo.FolderService.UpdateFolder(userIdStr, id, updateRequest)
+
+	if error != nil {
+		logger.Error("Error updating folder %v\n", error.Error())
+		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
-			"error":   "Failed to get the folder",
+			"error":   error.Error(),
 		})
+		return
 	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"folder":  updatedFolder,
+	})
+	return
 
 }
 
