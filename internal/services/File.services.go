@@ -1,9 +1,13 @@
 package services
 
 import (
+	"errors"
+	"fmt"
 	"goCal/internal/db"
 	"goCal/internal/logger"
 	"goCal/internal/schema"
+
+	"gorm.io/gorm"
 )
 
 type FileService struct {
@@ -44,16 +48,26 @@ func (f *FileService) GetUserFile(id string, userId string) (*schema.File, error
 }
 
 func (f *FileService) CreateFile(file *schema.File, userId string) (*schema.File, error) {
-	var existingFile *schema.File
-	result := db.DB.Find(&existingFile).Where("file_name = ? AND uploaded_by = ?", file.FileName, userId)
+	var existingFile schema.File
+
+	// Check if file with same name already exists for user
+	result := db.DB.Where("file_name = ? AND uploaded_by_id = ?", file.FileName, userId).First(&existingFile)
+
 	if result.Error == nil {
-		logger.Error("File With same name already Exists. Choose another One %s ", result.Error)
+		// record found => duplicate
+		return nil, fmt.Errorf("file with same name already exists")
+	}
+
+	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		// real DB error
 		return nil, result.Error
 	}
 
+	// Create new file
 	resultFileCreation := db.DB.Create(file)
 	if resultFileCreation.Error != nil {
 		logger.Error("Failed to create file %s", resultFileCreation.Error)
+		return nil, resultFileCreation.Error
 	}
 
 	return file, nil
