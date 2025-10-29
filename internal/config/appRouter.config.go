@@ -17,7 +17,7 @@ func InitRouter() *gin.Engine {
 	userRouter := mainRouter.Group("/api/user")
 	routes.UserRoutes(userRouter)
 
-	folderRouter := mainRouter.Group("/api/folder")
+	folderRouter := mainRouter.Group("/api/folders")
 	routes.FolderRoutes(folderRouter)
 
 	return mainRouter
