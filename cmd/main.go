@@ -20,7 +20,6 @@ import (
 func main() {
 	logger.InitLogger()
 	config.GetLoadEnvVars()
-	config.StorageInit()
 	db.DBConnect()
 
 	r := config.InitRouter()

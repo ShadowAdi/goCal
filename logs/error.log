@@ -84,3 +84,9 @@
 {"time":"2025-10-28T16:55:20.0972005+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-28T16:56:11.8261786+05:30","level":"ERROR","msg":"Failed to upload file to supabase <nil> "}
 {"time":"2025-10-28T16:56:11.9742231+05:30","level":"ERROR","msg":"File With same name already Exists. Choose another One %s ","!BADKEY":null}
+{"time":"2025-10-29T05:47:57.8297953+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:47:58.4444041+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:47:58.9843754+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:47:59.4668518+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:48:00.0845498+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:50:19.7318212+05:30","level":"ERROR","msg":"Failed to parse multipart form: request Content-Type isn't multipart/form-data"}

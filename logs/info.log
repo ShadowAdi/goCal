@@ -65,3 +65,6 @@
 {"time":"2025-10-28T16:55:35.7954339+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
 {"time":"2025-10-28T16:55:35.7959917+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
 {"time":"2025-10-28T16:56:11.5755891+05:30","level":"INFO","msg":"msg","Uploading file 6a8b07ed-9e1f-44dd-9d7f-dfdb4684e3391761650771_g4236.png to bucket: goCal-Albums-Bucket":null}
+{"time":"2025-10-29T05:48:08.2560876+05:30","level":"INFO","msg":"msg","Database connected":null}
+{"time":"2025-10-29T05:48:08.2875689+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-29T05:48:08.2971256+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
