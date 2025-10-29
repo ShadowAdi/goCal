@@ -90,3 +90,5 @@
 {"time":"2025-10-29T05:47:59.4668518+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-29T05:48:00.0845498+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-29T05:50:19.7318212+05:30","level":"ERROR","msg":"Failed to parse multipart form: request Content-Type isn't multipart/form-data"}
+{"time":"2025-10-29T08:17:48.1180655+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:17:48.1192764+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}

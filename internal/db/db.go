@@ -44,7 +44,7 @@ func DBConnect() {
 
 	DB = db
 
-	if err := DB.AutoMigrate(&schema.User{}); err != nil {
+	if err := DB.AutoMigrate(&schema.User{}, &schema.Folder{}); err != nil {
 		logger.Error("Failed to auto-migrate tables: %w", err)
 		panic(fmt.Errorf("Failed to auto-migrate tables: %w", err))
 	}
