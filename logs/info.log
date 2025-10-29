@@ -85,3 +85,9 @@
 {"time":"2025-10-29T08:25:46.5511141+05:30","level":"INFO","msg":"msg","Database connected":null}
 {"time":"2025-10-29T08:25:46.5554932+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
 {"time":"2025-10-29T08:25:46.5598256+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-29T08:43:48.8164603+05:30","level":"INFO","msg":"msg","Database connected":null}
+{"time":"2025-10-29T08:43:48.8178693+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-29T08:43:48.8201142+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-29T08:44:51.119237+05:30","level":"INFO","msg":"msg","Database connected":null}
+{"time":"2025-10-29T08:44:51.2133193+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}
+{"time":"2025-10-29T08:44:51.585429+05:30","level":"INFO","msg":"msg","Email service initialized successfully":null}

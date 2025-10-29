@@ -253,7 +253,7 @@ func (fo FolderController) DeleteFolder(ctx *gin.Context) {
 		})
 	}
 
-	message, error := fo.FolderService.DeleteFolder(id, userIdStr)
+	message, error := fo.FolderService.DeleteFolder(userIdStr, id)
 
 	if error != nil {
 		logger.Error("Error deleting folder %v\n", error.Error())

@@ -8,6 +8,7 @@ import (
 	"goCal/internal/schema"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
@@ -125,13 +126,22 @@ func (fo *FolderService) UpdateFolder(userId string, folderId string, folderData
 	}
 
 	if folderData.FolderTags != nil {
-		updatedFields["folder_tags"] = folderData.FolderTags
+		tags := make(pq.StringArray, 0, len(folderData.FolderTags))
+		for _, tagPtr := range folderData.FolderTags {
+			if tagPtr != nil {
+				tags = append(tags, *tagPtr)
+			}
+		}
+		updatedFields["folder_tags"] = tags
+
 	}
 
 	if len(updatedFields) > 0 {
-		if err := db.DB.Model(&schema.Folder{}).Where("id = ? AND created_by_id = ?", folderId, userId).Updates(updatedFields); err != nil {
-			logger.Error("Failed to Update Folder %w", err)
-			return nil, err.Error
+		if err := db.DB.Model(&schema.Folder{}).
+			Where("id = ? AND created_by_id = ?", folderId, userId).
+			Updates(updatedFields).Error; err != nil {
+			logger.Error("Failed to Update Folder %v", err)
+			return nil, err
 		}
 	}
 
