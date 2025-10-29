@@ -92,3 +92,8 @@
 {"time":"2025-10-29T05:50:19.7318212+05:30","level":"ERROR","msg":"Failed to parse multipart form: request Content-Type isn't multipart/form-data"}
 {"time":"2025-10-29T08:17:48.1180655+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
 {"time":"2025-10-29T08:17:48.1192764+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:18:35.517361+05:30","level":"ERROR","msg":"Failed to connect to DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-29T08:19:00.6296428+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:19:00.6301543+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:19:44.8801716+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:19:44.8808882+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}

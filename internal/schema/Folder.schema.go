@@ -10,7 +10,7 @@ type Folder struct {
 	FolderName        string    `gorm:"uniqueIndex;not null;size:200" json:"folder_name" validate:"required,min=3,max=50"`
 	FolderDescription string    `gorm:"size:500" json:"folder_description"`
 	FolderTags        []string  `gorm:"type:text[]" json:"folder_tags"`
-	CreatedById       uuid.UUID `gorm:"type:uuid;not null" json:"created_by"`
+	CreatedById       uuid.UUID `gorm:"column:created_by;type:uuid;not null" json:"created_by"`
 	createdBy         User      `gorm:"constraint:OnDelete:CASCADE;" json:"-"`
 }
 

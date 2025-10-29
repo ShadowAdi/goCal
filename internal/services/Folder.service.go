@@ -1,9 +1,14 @@
 package services
 
 import (
+	"errors"
+	"fmt"
 	"goCal/internal/db"
 	"goCal/internal/logger"
 	"goCal/internal/schema"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type FolderService struct {
@@ -54,20 +59,33 @@ func (fo *FolderService) GetFolderByNameForUser(folderName string, userId string
 }
 
 func (fo *FolderService) CreateFolder(userId string, folderData *schema.Folder) (*schema.Folder, error) {
-	var existingFolder *schema.Folder
-	errFoundFolder := db.DB.Where("folder_name = ? AND created_by = ?", folderData.FolderName, userId).First(&existingFolder).Error
+	// check if folder already exists
+	var existingFolder schema.Folder
+	err := db.DB.Where("folder_name = ? AND created_by = ?", folderData.FolderName, userId).First(&existingFolder).Error
 
-	if errFoundFolder != nil {
-		logger.Error(`Failed to get folder %w`, errFoundFolder.Error())
-		return nil, errFoundFolder
+	if err == nil {
+		// folder already exists
+		return nil, fmt.Errorf("folder with the same name already exists")
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+		// actual DB error
+		logger.Error(`DB error while checking existing folder: %v`, err)
+		return nil, err
 	}
 
-	result := db.DB.Create(&existingFolder)
+	// create new folder
+	userUUID, err := uuid.Parse(userId)
+	if err != nil {
+		return nil, fmt.Errorf("invalid userId format")
+	}
+
+	folderData.CreatedById = userUUID
+	result := db.DB.Create(folderData)
 	if result.Error != nil {
-		logger.Error(`Failed to create folder %w`, result.Error)
+		logger.Error(`Failed to create folder: %v`, result.Error)
 		return nil, result.Error
 	}
-	return fo.GetFolderByNameForUser(existingFolder.FolderName, userId)
+
+	return folderData, nil
 }
 
 func (fo *FolderService) DeleteFolder(userId string, folderId string) (string, error) {
