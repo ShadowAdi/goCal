@@ -9,11 +9,9 @@ import (
 )
 
 func FolderRoutes(router *gin.RouterGroup) {
-	fileService := services.NewFileService()
 	userService := services.NewUserService()
 	folderService := services.NewFolderService()
-	folderController := controllers.NewFolderController(folderService, userService, fileService)
-
+	folderController := controllers.NewFolderController(userService, folderService)
 	router.GET("/", folderController.GetAllFolders)
 	router.GET("/:id", folderController.GetFolder)
 
@@ -23,4 +21,5 @@ func FolderRoutes(router *gin.RouterGroup) {
 	protectedRoutes.POST("/", folderController.CreateFolder)
 	protectedRoutes.PATCH("/folder/:id", folderController.UpdateFolder)
 	protectedRoutes.DELETE("/folder/:id", folderController.DeleteFolder)
+
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"goCal/internal/logger"
 	"goCal/internal/schema"
 	"goCal/internal/services"
@@ -10,20 +11,18 @@ import (
 )
 
 type FolderController struct {
-	FileService   *services.FileService
 	UserService   *services.UserService
 	FolderService *services.FolderService
 }
 
-func NewFolderController(folderService *services.FolderService, userService *services.UserService, fileService *services.FileService) *FolderController {
+func NewFolderController(userService *services.UserService, folderService *services.FolderService) *FolderController {
 	return &FolderController{
-		FileService:   fileService,
 		UserService:   userService,
 		FolderService: folderService,
 	}
 }
 
-func (fo *FolderController) GetAllFolders(ctx *gin.Context) {
+func (fo FolderController) GetAllFolders(ctx *gin.Context) {
 	folders, err := fo.FolderService.GetFolders()
 	if err != nil {
 		logger.Error("Failed to get all folders %v ", err)
@@ -33,7 +32,6 @@ func (fo *FolderController) GetAllFolders(ctx *gin.Context) {
 		})
 		return
 	}
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"folders": folders,
@@ -41,34 +39,33 @@ func (fo *FolderController) GetAllFolders(ctx *gin.Context) {
 	return
 }
 
-func (fo *FolderController) GetFolder(ctx *gin.Context) {
+func (fo FolderController) GetFolder(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
-		logger.Error("Folder Id Not Provided")
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"error":   "Folder Id Not Provided",
-		})
-	}
-	folderFound, err := fo.FolderService.GetFolder(id)
-	if err != nil {
-		logger.Error("Failed to get the folder\n")
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"success": false,
-			"error":   err,
-			"message": "Failed to get the folder",
+			"message": "Failed to get the id",
 		})
 		return
 	}
 
+	folders, err := fo.FolderService.GetFolder(id)
+	if err != nil {
+		logger.Error("Failed to get folder %v ", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err,
+		})
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"folder":  folderFound,
+		"folders": folders,
 	})
 	return
 }
 
-func (fo *FolderController) CreateFolder(ctx *gin.Context) {
+func (fo FolderController) CreateFolder(ctx *gin.Context) {
 	userId, exists := ctx.Get("userId")
 	if !exists {
 		logger.Error("Error getting userId")
@@ -115,7 +112,7 @@ func (fo *FolderController) CreateFolder(ctx *gin.Context) {
 		})
 	}
 
-	folder, error := fo.FolderService.CreateFolder(newFolder, userIdStr)
+	folder, error := fo.FolderService.CreateFolder(userIdStr, newFolder)
 
 	if error != nil {
 		logger.Error("Error creating folder %v\n", error.Error())
@@ -136,28 +133,28 @@ func (fo *FolderController) CreateFolder(ctx *gin.Context) {
 
 }
 
-func (fo *FolderController) DeleteFolder(ctx *gin.Context) {
+func (fo FolderController) UpdateFolder(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
-		logger.Error("Failed to get the id in the request ", id)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"message": "Failed to get the id of the request",
+			"message": "Failed to get the id",
 		})
+		return
 	}
 
 	userId, exists := ctx.Get("userId")
+
 	if !exists {
-		logger.Error("Error getting userId")
-		ctx.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"success": false,
-			"error":   "Not Authorized",
+			"error":   "User Id not found in context",
 		})
+		return
 	}
 
 	userIdStr, ok := userId.(string)
-	if !ok || userIdStr == "" {
-		logger.Error("Error parsing userId\n")
+	if !ok {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   "Invalid User Id type in context",
@@ -167,73 +164,7 @@ func (fo *FolderController) DeleteFolder(ctx *gin.Context) {
 
 	loggedInUserFound, loggedInUserError := fo.UserService.GetUser(userIdStr)
 	if loggedInUserError != nil {
-		logger.Error("Error finding logged-in user: %v\n", loggedInUserError)
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"success": false,
-			"error":   loggedInUserError.Error(),
-		})
-		return
-	}
-
-	if loggedInUserFound.IsVerified == false {
-		ctx.JSON(http.StatusForbidden, gin.H{
-			"success": false,
-			"error":   "User Is Not Verified",
-		})
-	}
-
-	message, error := fo.FolderService.DeleteFolder(id, userIdStr)
-
-	if error != nil {
-		logger.Error("Error deleting folder %v\n", error.Error())
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"success": false,
-			"error":   error.Error(),
-			"message": message,
-		})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"message": message,
-	})
-	return
-
-}
-
-func (fo *FolderController) UpdateFolder(ctx *gin.Context) {
-	id := ctx.Param("id")
-	if id == "" {
-		logger.Error("Failed to get the id in the request ", id)
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"success": false,
-			"message": "Failed to get the id of the request",
-		})
-	}
-
-	userId, exists := ctx.Get("userId")
-	if !exists {
-		logger.Error("Error getting userId")
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"success": false,
-			"error":   "Not Authorized",
-		})
-	}
-
-	userIdStr, ok := userId.(string)
-	if !ok || userIdStr == "" {
-		logger.Error("Error parsing userId\n")
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"success": false,
-			"error":   "Invalid User Id type in context",
-		})
-		return
-	}
-
-	loggedInUserFound, loggedInUserError := fo.UserService.GetUser(userIdStr)
-	if loggedInUserError != nil {
-		logger.Error("Error finding logged-in user: %v\n", loggedInUserError)
+		fmt.Printf("Error finding logged-in user: %v\n", loggedInUserError)
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"error":   loggedInUserError.Error(),
@@ -257,7 +188,7 @@ func (fo *FolderController) UpdateFolder(ctx *gin.Context) {
 		return
 	}
 
-	updatedFolder, error := fo.FolderService.UpdateFolder(updateRequest, id, userIdStr)
+	updatedFolder, error := fo.FolderService.UpdateFolder(userIdStr, id, updateRequest)
 
 	if error != nil {
 		logger.Error("Error updating folder %v\n", error.Error())
@@ -271,6 +202,72 @@ func (fo *FolderController) UpdateFolder(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"folder":  updatedFolder,
+	})
+	return
+
+}
+
+func (fo FolderController) DeleteFolder(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Failed to get the id",
+		})
+		return
+	}
+
+	userId, exists := ctx.Get("userId")
+
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"error":   "User Id not found in context",
+		})
+		return
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
+		})
+		return
+	}
+
+	loggedInUserFound, loggedInUserError := fo.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		fmt.Printf("Error finding logged-in user: %v\n", loggedInUserError)
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
+	}
+
+	message, error := fo.FolderService.DeleteFolder(userIdStr, id)
+
+	if error != nil {
+		logger.Error("Error deleting folder %v\n", error.Error())
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   error.Error(),
+			"message": message,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": message,
 	})
 	return
 

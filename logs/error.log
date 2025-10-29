@@ -84,3 +84,31 @@
 {"time":"2025-10-28T16:55:20.0972005+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
 {"time":"2025-10-28T16:56:11.8261786+05:30","level":"ERROR","msg":"Failed to upload file to supabase <nil> "}
 {"time":"2025-10-28T16:56:11.9742231+05:30","level":"ERROR","msg":"File With same name already Exists. Choose another One %s ","!BADKEY":null}
+{"time":"2025-10-29T05:47:57.8297953+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Other-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:47:58.4444041+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Docs-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:47:58.9843754+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Albums-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:47:59.4668518+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Audios-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:48:00.0845498+05:30","level":"ERROR","msg":"Failed to create bucket goCal-Videos-Bucket: new row violates row-level security policy"}
+{"time":"2025-10-29T05:50:19.7318212+05:30","level":"ERROR","msg":"Failed to parse multipart form: request Content-Type isn't multipart/form-data"}
+{"time":"2025-10-29T08:17:48.1180655+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:17:48.1192764+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:18:35.517361+05:30","level":"ERROR","msg":"Failed to connect to DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-29T08:19:00.6296428+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:19:00.6301543+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:19:44.8801716+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:19:44.8808882+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:23:28.9489512+05:30","level":"ERROR","msg":"Failed to create folder: %v","!BADKEY":"ERROR: malformed array literal: \"test\" (SQLSTATE 22P02)"}
+{"time":"2025-10-29T08:23:28.9495759+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: malformed array literal: \"test\" (SQLSTATE 22P02)"}
+{"time":"2025-10-29T08:26:03.1461631+05:30","level":"ERROR","msg":"Failed to create folder: %v","!BADKEY":"ERROR: null value in column \"created_by_id\" of relation \"folders\" violates not-null constraint (SQLSTATE 23502)"}
+{"time":"2025-10-29T08:26:03.1466852+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: null value in column \"created_by_id\" of relation \"folders\" violates not-null constraint (SQLSTATE 23502)"}
+{"time":"2025-10-29T08:43:21.2939721+05:30","level":"ERROR","msg":"Failed to connect to DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-29T08:43:21.3000439+05:30","level":"ERROR","msg":"Failed to ping DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
+{"time":"2025-10-29T08:44:24.7026847+05:30","level":"ERROR","msg":"Failed to create folder: %v","!BADKEY":"ERROR: null value in column \"created_by\" of relation \"folders\" violates not-null constraint (SQLSTATE 23502)"}
+{"time":"2025-10-29T08:44:24.7026847+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: null value in column \"created_by\" of relation \"folders\" violates not-null constraint (SQLSTATE 23502)"}
+{"time":"2025-10-29T08:45:49.8193591+05:30","level":"ERROR","msg":"DB error while checking existing folder: %v","!BADKEY":"ERROR: cached plan must not change result type (SQLSTATE 0A000)"}
+{"time":"2025-10-29T08:45:49.8198733+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: cached plan must not change result type (SQLSTATE 0A000)"}
+{"time":"2025-10-29T08:51:16.4564866+05:30","level":"ERROR","msg":"Failed to Update Folder %w","!BADKEY":"!ERROR:json: unsupported type: func() time.Time"}
+{"time":"2025-10-29T08:51:16.4607929+05:30","level":"ERROR","msg":"Error updating folder %v\n","!BADKEY":"ERROR: malformed array literal: \"checks\" (SQLSTATE 22P02)"}
+{"time":"2025-10-29T08:55:14.3506545+05:30","level":"ERROR","msg":"Failed to Update Folder %w","!BADKEY":"!ERROR:json: unsupported type: func() time.Time"}
+{"time":"2025-10-29T08:55:14.3506545+05:30","level":"ERROR","msg":"Error updating folder %v\n","!BADKEY":"ERROR: malformed array literal: \"checks\" (SQLSTATE 22P02)"}
+{"time":"2025-10-29T08:55:34.6375957+05:30","level":"ERROR","msg":"Failed to connect to DB: %w","!BADKEY":"failed to connect to `user=neondb_owner database=neondb`: hostname resolving error: lookup ep-tiny-brook-a1tnajyj-pooler.ap-southeast-1.aws.neon.tech: no such host"}
