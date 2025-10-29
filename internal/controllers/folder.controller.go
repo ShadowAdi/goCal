@@ -243,20 +243,22 @@ func (fo FolderController) DeleteFolder(ctx *gin.Context) {
 		})
 	}
 
-	var existingFolder *schema.Folder
-	if err := ctx.ShouldBindJSON(&existingFolder); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
+	message, error := fo.FolderService.DeleteFolder(id, userIdStr)
+
+	if error != nil {
+		logger.Error("Error deleting folder %v\n", error.Error())
+		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
-			"error":   "Failed to parse the folder",
+			"error":   error.Error(),
+			"message": message,
 		})
 		return
 	}
 
-	if existingFolder == nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"success": false,
-			"error":   "Failed to get the folder",
-		})
-	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": message,
+	})
+	return
 
 }
