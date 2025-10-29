@@ -66,14 +66,70 @@ func (fo FolderController) GetFolder(ctx *gin.Context) {
 }
 
 func (fo FolderController) CreateFolder(ctx *gin.Context) {
-	var newFolder *schema.Folder
-	if err := ctx.ShouldBindJSON(&newFolder); err != nil {
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		logger.Error("Error getting userId")
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"error":   "Failed to parse the folder",
+			"error":   "Not Authorized",
+		})
+	}
+
+	userIdStr, ok := userId.(string)
+	if !ok || userIdStr == "" {
+		logger.Error("Error parsing userId\n")
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Invalid User Id type in context",
 		})
 		return
 	}
+
+	var newFolder *schema.Folder
+	if err := ctx.ShouldBindJSON(&newFolder); err != nil {
+		logger.Error("Error parsing body: %v\n", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	loggedInUserFound, loggedInUserError := fo.UserService.GetUser(userIdStr)
+	if loggedInUserError != nil {
+		logger.Error("Error finding logged-in user: %v\n", loggedInUserError)
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   loggedInUserError.Error(),
+		})
+		return
+	}
+
+	if loggedInUserFound.IsVerified == false {
+		ctx.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"error":   "User Is Not Verified",
+		})
+	}
+
+	folder, error := fo.FolderService.CreateFolder(userIdStr, newFolder)
+
+	if error != nil {
+		logger.Error("Error creating folder %v\n", error.Error())
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   error.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Folder Created",
+		"file":    folder,
+	})
+
+	return
 
 }
 
