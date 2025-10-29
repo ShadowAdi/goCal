@@ -10,7 +10,8 @@ import (
 
 func FolderRoutes(router *gin.RouterGroup) {
 	userService := services.NewUserService()
-	folderController := controllers.NewFolderController(userService)
+	folderService := services.NewFolderService()
+	folderController := controllers.NewFolderController(userService, folderService)
 	router.GET("/", folderController.GetAllFolders)
 	router.GET("/:id", folderController.GetFolder)
 

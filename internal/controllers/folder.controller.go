@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"goCal/internal/logger"
 	"goCal/internal/schema"
 	"goCal/internal/services"
 	"net/http"
@@ -10,17 +11,32 @@ import (
 )
 
 type FolderController struct {
-	UserService *services.UserService
+	UserService   *services.UserService
+	FolderService *services.FolderService
 }
 
-func NewFolderController(userService *services.UserService) *FolderController {
+func NewFolderController(userService *services.UserService, folderService *services.FolderService) *FolderController {
 	return &FolderController{
-		UserService: userService,
+		UserService:   userService,
+		FolderService: folderService,
 	}
 }
 
 func (fo FolderController) GetAllFolders(ctx *gin.Context) {
-
+	folders, err := fo.FolderService.GetFolders()
+	if err != nil {
+		logger.Error("Failed to get all folders %v ", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"folders": folders,
+	})
+	return
 }
 
 func (fo FolderController) GetFolder(ctx *gin.Context) {
@@ -33,6 +49,20 @@ func (fo FolderController) GetFolder(ctx *gin.Context) {
 		return
 	}
 
+	folders, err := fo.FolderService.GetFolder(id)
+	if err != nil {
+		logger.Error("Failed to get folder %v ", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"folders": folders,
+	})
+	return
 }
 
 func (fo FolderController) CreateFolder(ctx *gin.Context) {
