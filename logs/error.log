@@ -97,3 +97,5 @@
 {"time":"2025-10-29T08:19:00.6301543+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
 {"time":"2025-10-29T08:19:44.8801716+05:30","level":"ERROR","msg":"Failed to get folder %w","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
 {"time":"2025-10-29T08:19:44.8808882+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
+{"time":"2025-10-29T08:23:28.9489512+05:30","level":"ERROR","msg":"Failed to create folder: %v","!BADKEY":"ERROR: malformed array literal: \"test\" (SQLSTATE 22P02)"}
+{"time":"2025-10-29T08:23:28.9495759+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: malformed array literal: \"test\" (SQLSTATE 22P02)"}
