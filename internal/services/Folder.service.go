@@ -145,5 +145,5 @@ func (fo *FolderService) UpdateFolder(userId string, folderId string, folderData
 		}
 	}
 
-	return existingFolder, nil
+	return fo.GetFolder(folderId)
 }
