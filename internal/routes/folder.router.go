@@ -20,6 +20,6 @@ func FolderRoutes(router *gin.RouterGroup) {
 
 	protectedRoutes.POST("/", folderController.CreateFolder)
 	protectedRoutes.PATCH("/folder/:id", folderController.UpdateFolder)
-	protectedRoutes.POST("/folder/:id", folderController.DeleteFolder)
+	protectedRoutes.DELETE("/folder/:id", folderController.DeleteFolder)
 
 }
