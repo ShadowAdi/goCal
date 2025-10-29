@@ -50,7 +50,7 @@ func (fo *FolderService) GetFolderByName(folderName string) (*schema.Folder, err
 
 func (fo *FolderService) GetFolderByNameForUser(folderName string, userId string) (*schema.Folder, error) {
 	var folder *schema.Folder
-	result := db.DB.Where("folder_name = ? AND created_by = ?", folderName, userId).First(&folder)
+	result := db.DB.Where("folder_name = ? AND created_by_id = ?", folderName, userId).First(&folder)
 	if result.Error != nil {
 		logger.Error(`Failed to get Folder %w`, result.Error)
 		return nil, result.Error
@@ -61,7 +61,7 @@ func (fo *FolderService) GetFolderByNameForUser(folderName string, userId string
 func (fo *FolderService) CreateFolder(userId string, folderData *schema.Folder) (*schema.Folder, error) {
 	// check if folder already exists
 	var existingFolder schema.Folder
-	err := db.DB.Where("folder_name = ? AND created_by = ?", folderData.FolderName, userId).First(&existingFolder).Error
+	err := db.DB.Where("folder_name = ? AND created_by_id = ?", folderData.FolderName, userId).First(&existingFolder).Error
 
 	if err == nil {
 		// folder already exists
@@ -90,7 +90,7 @@ func (fo *FolderService) CreateFolder(userId string, folderData *schema.Folder) 
 
 func (fo *FolderService) DeleteFolder(userId string, folderId string) (string, error) {
 	var existingFolder *schema.Folder
-	errFoundFolder := db.DB.Where("id = ? AND created_by = ?", folderId, userId).First(&existingFolder).Error
+	errFoundFolder := db.DB.Where("id = ? AND created_by_id = ?", folderId, userId).First(&existingFolder).Error
 
 	if errFoundFolder != nil {
 		logger.Error(`Failed to delete folder. Folder Not Found %w`, errFoundFolder.Error())
@@ -107,7 +107,7 @@ func (fo *FolderService) DeleteFolder(userId string, folderId string) (string, e
 
 func (fo *FolderService) UpdateFolder(userId string, folderId string, folderData *schema.UpdateFolderRequest) (*schema.Folder, error) {
 	var existingFolder *schema.Folder
-	errFoundFolder := db.DB.Where("id = ? AND created_by = ?", folderId, userId).First(&existingFolder).Error
+	errFoundFolder := db.DB.Where("id = ? AND created_by_id = ?", folderId, userId).First(&existingFolder).Error
 
 	if errFoundFolder != nil {
 		logger.Error(`Failed to Update folder. Not Found %w`, errFoundFolder.Error())
@@ -129,7 +129,7 @@ func (fo *FolderService) UpdateFolder(userId string, folderId string, folderData
 	}
 
 	if len(updatedFields) > 0 {
-		if err := db.DB.Model(&schema.Folder{}).Where("id = ? AND created_by = ?", folderId, userId).Updates(updatedFields); err != nil {
+		if err := db.DB.Model(&schema.Folder{}).Where("id = ? AND created_by_id = ?", folderId, userId).Updates(updatedFields); err != nil {
 			logger.Error("Failed to Update Folder %w", err)
 			return nil, err.Error
 		}

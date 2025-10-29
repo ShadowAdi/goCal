@@ -99,3 +99,5 @@
 {"time":"2025-10-29T08:19:44.8808882+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: column \"created_by\" does not exist (SQLSTATE 42703)"}
 {"time":"2025-10-29T08:23:28.9489512+05:30","level":"ERROR","msg":"Failed to create folder: %v","!BADKEY":"ERROR: malformed array literal: \"test\" (SQLSTATE 22P02)"}
 {"time":"2025-10-29T08:23:28.9495759+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: malformed array literal: \"test\" (SQLSTATE 22P02)"}
+{"time":"2025-10-29T08:26:03.1461631+05:30","level":"ERROR","msg":"Failed to create folder: %v","!BADKEY":"ERROR: null value in column \"created_by_id\" of relation \"folders\" violates not-null constraint (SQLSTATE 23502)"}
+{"time":"2025-10-29T08:26:03.1466852+05:30","level":"ERROR","msg":"Error creating folder %v\n","!BADKEY":"ERROR: null value in column \"created_by_id\" of relation \"folders\" violates not-null constraint (SQLSTATE 23502)"}
